@@ -3,25 +3,9 @@ import { Users, Play, Copy, Check, ArrowLeft, Crown, Zap, Flag, RefreshCw, Lock,
 import { MultiplayerRoom, RoomState, PlayerState, LobbyTracker, PublicRoomInfo } from "../lib/multiplayer";
 import { Region } from "../types";
 
-export type ModeScope = "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world" | "sido" | "sigungu";
+export type ModeScope = "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world" | "sido" | "sigungu";
 
 export const getMultiplayerTheme = (scopeOrLevel?: string) => {
-  if (scopeOrLevel === "uk") {
-    return {
-      primaryBtn: "bg-indigo-700 hover:bg-indigo-600 text-white shadow-md shadow-indigo-700/20",
-      primaryBg: "bg-indigo-700",
-      border: "border-indigo-200 dark:border-indigo-800/80",
-      lightCardBg: "bg-gradient-to-br from-indigo-50 via-blue-50/50 to-sky-50 dark:from-indigo-950/40 dark:via-indigo-950/20 dark:to-blue-950/20 border-indigo-200/90 dark:border-indigo-800/80",
-      badgeBg: "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800",
-      badgeIcon: "text-indigo-600 dark:text-indigo-400",
-      accentText: "text-indigo-600 dark:text-indigo-400",
-      focusRing: "focus:ring-indigo-500/20 focus:border-indigo-500",
-      avatarBg: "bg-indigo-100 dark:bg-indigo-950/80 text-indigo-800 dark:text-indigo-200",
-      activeTabBtn: "bg-indigo-700 text-white border-indigo-700 shadow-sm",
-      joinBtn: "bg-indigo-900 dark:bg-indigo-700 dark:hover:bg-indigo-600 hover:bg-indigo-800 text-white",
-      progressBg: "bg-indigo-600",
-    };
-  }
   if (scopeOrLevel === "spain") {
     return {
       primaryBtn: "bg-red-600 hover:bg-red-500 text-white shadow-md shadow-red-600/20",
@@ -194,7 +178,6 @@ export interface AllRegionsData {
   france?: Region[];
   italy?: Region[];
   spain?: Region[];
-  uk?: Region[];
   world: Region[];
 }
 
@@ -203,7 +186,7 @@ interface MultiplayerViewProps {
   onSetNickname: (nick: string) => void;
   onBackToHome: () => void;
   allRegionsData: AllRegionsData;
-  homeScope?: "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world";
+  homeScope?: "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world";
   onStartMultiplayerGame: (room: MultiplayerRoom, initialRoomState: RoomState) => void;
 }
 
@@ -281,10 +264,9 @@ const generateCourseForPool = (pool: Region[], limit: number): Region[] => {
   return path;
 };
 
-const LEVEL_OPTIONS: { id: "sido" | "sigungu" | "uk" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world"; label: string; flag: string }[] = [
+const LEVEL_OPTIONS: { id: "sido" | "sigungu" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world"; label: string; flag: string }[] = [
   { id: "sido", label: "한국 광역지자체 (17)", flag: "🇰🇷" },
   { id: "sigungu", label: "한국 시·군·구 (229)", flag: "🇰🇷" },
-  { id: "uk", label: "영국 113 구성국 및 주요 지역 (113)", flag: "🇬🇧" },
   { id: "spain", label: "스페인 자치지방 (19)", flag: "🇪🇸" },
   { id: "italy", label: "이탈리아 20개 주 (20)", flag: "🇮🇹" },
   { id: "france", label: "프랑스 18개 레지옹 (18)", flag: "🇫🇷" },
@@ -353,10 +335,8 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
   }, []);
 
   // Selected level derived from top scope and Korea sub-level choice
-  const selectedLevel: "sido" | "sigungu" | "uk" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world" =
-    homeScope === "uk"
-      ? "uk"
-      : homeScope === "spain"
+  const selectedLevel: "sido" | "sigungu" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world" =
+    homeScope === "spain"
       ? "spain"
       : homeScope === "japan"
       ? "japan"
@@ -379,9 +359,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
   // Active theme based on top level selection or room level
   const activeLevel = roomState?.level || selectedLevel;
   const activeThemeKey =
-    activeLevel === "uk"
-      ? "uk"
-      : activeLevel === "spain"
+    activeLevel === "spain"
       ? "spain"
       : activeLevel === "italy"
       ? "italy"
@@ -547,8 +525,6 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
 
   const getCourseBadgeText = (level: string) => {
     switch (level) {
-      case "uk":
-        return "🇬🇧 영국";
       case "spain":
         return "🇪🇸 스페인";
       case "italy":

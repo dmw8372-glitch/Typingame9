@@ -5,7 +5,7 @@ const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY || "sb_publishable_ZkFBPP
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-export type LeaderboardMode = "sido" | "sigungu" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world";
+export type LeaderboardMode = "sido" | "sigungu" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world";
 
 export interface RankingRecord {
   id?: string;

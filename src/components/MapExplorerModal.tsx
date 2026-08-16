@@ -18,7 +18,6 @@ interface MapExplorerModalProps {
   franceList?: Region[];
   italyList?: Region[];
   spainList?: Region[];
-  ukList?: Region[];
   worldList: Region[];
   modeColors?: ModeColors;
   worldFillMode?: WorldFillMode;
@@ -26,7 +25,7 @@ interface MapExplorerModalProps {
   onToggleMapStyle?: (style: MapStyle) => void;
 }
 
-type ExplorerLevel = "sido" | "sigungu" | "uk" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world";
+type ExplorerLevel = "sido" | "sigungu" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world";
 
 export const MapExplorerModal: React.FC<MapExplorerModalProps> = ({
   isOpen,
@@ -41,7 +40,6 @@ export const MapExplorerModal: React.FC<MapExplorerModalProps> = ({
   franceList = [],
   italyList = [],
   spainList = [],
-  ukList = [],
   worldList,
   modeColors,
   worldFillMode,
@@ -60,7 +58,6 @@ export const MapExplorerModal: React.FC<MapExplorerModalProps> = ({
   const currentList = useMemo(() => {
     if (level === "sido") return sidoList;
     if (level === "sigungu") return sigunguList;
-    if (level === "uk") return ukList;
     if (level === "spain") return spainList;
     if (level === "italy") return italyList;
     if (level === "france") return franceList;
@@ -70,7 +67,7 @@ export const MapExplorerModal: React.FC<MapExplorerModalProps> = ({
     if (level === "china") return chinaList;
     if (level === "vietnam") return vietnamList;
     return worldList;
-  }, [level, sidoList, sigunguList, ukList, spainList, italyList, franceList, germanyList, japanList, usaList, chinaList, vietnamList, worldList]);
+  }, [level, sidoList, sigunguList, spainList, italyList, franceList, germanyList, japanList, usaList, chinaList, vietnamList, worldList]);
 
   const filteredRegions = useMemo(() => {
     if (!searchTerm.trim()) return currentList;
@@ -197,20 +194,6 @@ export const MapExplorerModal: React.FC<MapExplorerModalProps> = ({
               }`}
             >
               <span>🇰🇷 시·군·구</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setLevel("uk");
-                setSelectedRegion(null);
-              }}
-              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap ${
-                level === "uk"
-                  ? "bg-indigo-700 text-white shadow-sm"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              <span>🇬🇧 영국 ({ukList.length})</span>
             </button>
 
             <button

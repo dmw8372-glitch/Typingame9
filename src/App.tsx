@@ -39,7 +39,7 @@ import {
 } from "lucide-react";
 import { toPng } from "html-to-image";
 import { ResultCardExport } from "./components/ResultCardExport";
-import { REGIONS, SIDO_LIST, SIGUNGU_LIST, WORLD_LIST, JAPAN_LIST, USA_LIST, CHINA_LIST, VIETNAM_LIST, GERMANY_LIST, FRANCE_LIST, ITALY_LIST, SPAIN_LIST, UK_LIST, ALL_REGIONS } from "./data/regions";
+import { REGIONS, SIDO_LIST, SIGUNGU_LIST, WORLD_LIST, JAPAN_LIST, USA_LIST, CHINA_LIST, VIETNAM_LIST, GERMANY_LIST, FRANCE_LIST, ITALY_LIST, SPAIN_LIST, ALL_REGIONS } from "./data/regions";
 import { Region, GameSettings, PlayStats, QuizQuestion, PlayMode, ModeColors, WorldFillMode, LanguageOption, MapStyle, DEFAULT_MODE_COLORS, CustomVehicleConfig, DEFAULT_CUSTOM_VEHICLE } from "./types";
 import { Map } from "./components/Map";
 import { StatsPanel } from "./components/StatsPanel";
@@ -474,8 +474,6 @@ export default function App() {
         ? ITALY_LIST
         : settings.level === "spain"
         ? SPAIN_LIST
-        : settings.level === "uk"
-        ? UK_LIST
         : settings.level === "random"
         ? ALL_REGIONS
         : WORLD_LIST;

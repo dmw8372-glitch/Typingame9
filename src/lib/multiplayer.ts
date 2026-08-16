@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { Region } from "../types";
 
-export type MultiplayerLevel = "sido" | "sigungu" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world";
+export type MultiplayerLevel = "sido" | "sigungu" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world";
 
 export interface PlayerState {
   id: string;

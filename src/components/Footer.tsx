@@ -63,12 +63,6 @@ const SCOPE_CONFIGS: Record<string, { bgClass: string; border: string; hoverText
     hoverText: "hover:text-red-700 dark:hover:text-red-400",
     instagramColor: "text-red-600 dark:text-red-400",
   },
-  uk: {
-    bgClass: "bg-indigo-50/95 dark:bg-slate-900/95 backdrop-blur-md",
-    border: "border-indigo-900/10 dark:border-slate-800/60",
-    hoverText: "hover:text-indigo-700 dark:hover:text-indigo-400",
-    instagramColor: "text-indigo-600 dark:text-indigo-400",
-  },
   world: {
     bgClass: "bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-md",
     border: "border-slate-900/10 dark:border-slate-800/60",

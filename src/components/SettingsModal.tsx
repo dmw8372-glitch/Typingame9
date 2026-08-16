@@ -82,12 +82,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const isFrance = regionLevel === "france";
   const isItaly = regionLevel === "italy";
   const isSpain = regionLevel === "spain";
-  const isUk = regionLevel === "uk";
   const isWorld = regionLevel === "world";
 
-  const themePrimaryBg = isUk
-    ? "bg-indigo-700 hover:bg-indigo-600 text-white font-bold shadow-indigo-700/20"
-    : isSpain
+  const themePrimaryBg = isSpain
     ? "bg-red-600 hover:bg-red-500 text-white font-bold shadow-red-600/20"
     : isGermany
     ? "bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-black shadow-yellow-500/20"
@@ -107,9 +104,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     ? "bg-slate-700 hover:bg-slate-600 text-white font-bold"
     : "bg-emerald-600 hover:bg-emerald-500 text-white font-bold";
 
-  const themePrimaryBorder = isUk
-    ? "border-indigo-700"
-    : isSpain
+  const themePrimaryBorder = isSpain
     ? "border-red-600"
     : isGermany
     ? "border-yellow-500"
@@ -707,7 +702,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 { key: "france", label: isEn ? "🇫🇷 France" : "🇫🇷 프랑스", defaultColor: DEFAULT_MODE_COLORS.france },
                 { key: "italy", label: isEn ? "🇮🇹 Italy" : "🇮🇹 이탈리아", defaultColor: DEFAULT_MODE_COLORS.italy },
                 { key: "spain", label: isEn ? "🇪🇸 Spain" : "🇪🇸 스페인", defaultColor: DEFAULT_MODE_COLORS.spain },
-                { key: "uk", label: isEn ? "🇬🇧 UK" : "🇬🇧 영국", defaultColor: DEFAULT_MODE_COLORS.uk },
                 { key: "world", label: isEn ? "🌐 World (Solid)" : "🌐 전세계 (단색 모드)", defaultColor: DEFAULT_MODE_COLORS.world },
               ].map((modeItem) => {
                 const modeKey = modeItem.key as keyof ModeColors;

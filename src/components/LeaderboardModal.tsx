@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Trophy, Medal, X, RefreshCw, Crown, Zap, Clock, Target } from "lucide-react";
 import { fetchLeaderboard, RankingRecord } from "../lib/supabase";
 
-type LeaderboardMode = "sido" | "sigungu" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world";
+type LeaderboardMode = "sido" | "sigungu" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world";
 
 interface LeaderboardModalProps {
   isOpen: boolean;
@@ -28,7 +28,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      const VALID_MODES: LeaderboardMode[] = ["sido", "sigungu", "uk", "spain", "italy", "france", "germany", "vietnam", "japan", "usa", "china", "world"];
+      const VALID_MODES: LeaderboardMode[] = ["sido", "sigungu", "spain", "italy", "france", "germany", "vietnam", "japan", "usa", "china", "world"];
       const modeToLoad: LeaderboardMode = VALID_MODES.includes(defaultMode as any)
         ? (defaultMode as LeaderboardMode)
         : "sido";
@@ -76,7 +76,6 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
             {[
               { id: "sido", label: "🇰🇷 한국 광역" },
               { id: "sigungu", label: "🇰🇷 시·군·구" },
-              { id: "uk", label: "🇬🇧 영국" },
               { id: "spain", label: "🇪🇸 스페인" },
               { id: "italy", label: "🇮🇹 이탈리아" },
               { id: "france", label: "🇫🇷 프랑스" },
@@ -92,9 +91,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
                 onClick={() => handleTabChange(tab.id as LeaderboardMode)}
                 className={`py-2 px-3.5 rounded-xl text-xs font-extrabold transition-all whitespace-nowrap cursor-pointer shadow-sm ${
                   activeTab === tab.id
-                    ? tab.id === "uk"
-                      ? "bg-indigo-700 text-white font-black shadow-indigo-700/20"
-                      : tab.id === "spain"
+                    ? tab.id === "spain"
                       ? "bg-red-600 text-white font-black shadow-red-600/20"
                       : tab.id === "italy"
                       ? "bg-emerald-600 text-white font-black shadow-emerald-600/20"

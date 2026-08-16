@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type RegionLevel = "sido" | "sigungu" | "world" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "random";
+export type RegionLevel = "sido" | "sigungu" | "world" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "random";
 
 export interface Region {
   id: string;
@@ -32,7 +32,6 @@ export interface ModeColors {
   france: string;
   italy: string;
   spain: string;
-  uk: string;
   world: string;
 }
 
@@ -75,7 +74,6 @@ export const DEFAULT_MODE_COLORS: ModeColors = {
   france: "#2563eb",
   italy: "#15803d",
   spain: "#dc2626",
-  uk: "#1e3a8a",
   world: "#475569",
 };
 
