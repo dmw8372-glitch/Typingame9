@@ -117,6 +117,16 @@ const scopeThemes: Record<string, ScopeTheme> = {
     cardBg: "bg-[#fff8f8] dark:bg-slate-900",
     cardBorder: "border-red-200 dark:border-red-950",
   },
+  uk: {
+    topStripe: "bg-gradient-to-r from-blue-900 via-red-600 to-blue-800",
+    logoBg: "bg-blue-900 text-white font-bold",
+    logoText: "text-blue-900 dark:text-blue-400",
+    flightLine: "border-blue-300 dark:border-blue-800/80",
+    planeColor: "text-blue-800 dark:text-blue-400",
+    planeBg: "bg-[#f5f8fc] dark:bg-slate-900",
+    cardBg: "bg-[#f5f8fc] dark:bg-slate-900",
+    cardBorder: "border-blue-200 dark:border-blue-950",
+  },
   world: {
     topStripe: "bg-gradient-to-r from-slate-700 via-slate-600 to-amber-500",
     logoBg: "bg-slate-700 text-white",
@@ -186,6 +196,7 @@ export const TicketStartButton: React.FC<TicketStartButtonProps> = ({
     france: { code: "FRA", kr: "프랑스" },
     italy: { code: "ITA", kr: "이탈리아" },
     spain: { code: "ESP", kr: "스페인" },
+    uk: { code: "GBR", kr: "영국" },
     world: { code: "WLD", kr: "전세계" },
   };
 
@@ -210,6 +221,8 @@ export const TicketStartButton: React.FC<TicketStartButtonProps> = ({
     unitText = "20개 주";
   } else if (homeScope === "spain") {
     unitText = "17개 자치주·시";
+  } else if (homeScope === "uk") {
+    unitText = "113개 자치구·카운티";
   } else if (homeScope === "world") {
     unitText = "세계 국가";
   }

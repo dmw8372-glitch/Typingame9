@@ -39,7 +39,8 @@ export const VehicleCardPreview: React.FC<VehicleCardPreviewProps> = ({ type, re
   const expr = customConfig?.expression || "happy";
   const acc = customConfig?.accessory || "none";
 
-  const effectiveType = customConfig?.baseType || (type === "custom_draw" ? "person" : type);
+  // Use the explicit `type` prop for cards unless in custom_draw mode or baseType is explicitly defined for custom_draw
+  const effectiveType: VehicleType = (type === "custom_draw" ? (customConfig?.baseType || "person") : type) as VehicleType;
 
   // Expression JSX
   const renderExpression = () => {

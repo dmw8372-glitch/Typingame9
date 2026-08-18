@@ -39,7 +39,7 @@ import {
 } from "lucide-react";
 import { toPng } from "html-to-image";
 import { ResultCardExport } from "./components/ResultCardExport";
-import { REGIONS, SIDO_LIST, SIGUNGU_LIST, WORLD_LIST, JAPAN_LIST, USA_LIST, CHINA_LIST, VIETNAM_LIST, GERMANY_LIST, FRANCE_LIST, ITALY_LIST, SPAIN_LIST, ALL_REGIONS } from "./data/regions";
+import { REGIONS, SIDO_LIST, SIGUNGU_LIST, WORLD_LIST, JAPAN_LIST, USA_LIST, CHINA_LIST, VIETNAM_LIST, GERMANY_LIST, FRANCE_LIST, ITALY_LIST, SPAIN_LIST, UK_LIST, ALL_REGIONS } from "./data/regions";
 import { Region, GameSettings, PlayStats, QuizQuestion, PlayMode, ModeColors, WorldFillMode, LanguageOption, MapStyle, DEFAULT_MODE_COLORS, CustomVehicleConfig, DEFAULT_CUSTOM_VEHICLE } from "./types";
 import { Map } from "./components/Map";
 import { StatsPanel } from "./components/StatsPanel";
@@ -247,7 +247,7 @@ export default function App() {
 
   // Screenshot Theme / Tab / Scope states
   const [homeTab, setHomeTab] = useState<"single" | "multiplayer">("single");
-  const [homeScope, setHomeScope] = useState<"korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "world">("korea");
+  const [homeScope, setHomeScope] = useState<"korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world" | "random">("korea");
   const [travelWay, setTravelWay] = useState<"typing" | "quiz">("typing");
   const [quizType, setQuizType] = useState<"country" | "capital">("country");
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
@@ -474,6 +474,8 @@ export default function App() {
         ? ITALY_LIST
         : settings.level === "spain"
         ? SPAIN_LIST
+        : settings.level === "uk"
+        ? UK_LIST
         : settings.level === "random"
         ? ALL_REGIONS
         : WORLD_LIST;
@@ -507,6 +509,8 @@ export default function App() {
         ? ITALY_LIST
         : settings.level === "spain"
         ? SPAIN_LIST
+        : settings.level === "uk"
+        ? UK_LIST
         : settings.level === "random"
         ? ALL_REGIONS
         : WORLD_LIST
@@ -1162,6 +1166,8 @@ export default function App() {
           ? "이탈리아"
           : settings.level === "spain"
           ? "스페인"
+          : settings.level === "uk"
+          ? "영국"
           : settings.level === "world"
           ? "세계 각국"
           : "대한민국 국토";
@@ -1206,6 +1212,8 @@ export default function App() {
           ? ITALY_LIST
           : settings.level === "spain"
           ? SPAIN_LIST
+          : settings.level === "uk"
+          ? UK_LIST
           : WORLD_LIST;
       
       // Select 5 unique random regions
@@ -1290,6 +1298,8 @@ export default function App() {
           ? "bg-emerald-50/40 dark:bg-slate-950"
           : homeScope === "spain"
           ? "bg-red-50/40 dark:bg-slate-950"
+          : homeScope === "uk"
+          ? "bg-indigo-50/40 dark:bg-slate-950"
           : homeScope === "world"
           ? "bg-slate-100 dark:bg-slate-950"
           : "bg-[#dceee9]/70 dark:bg-slate-950"
@@ -1340,6 +1350,8 @@ export default function App() {
                 ? "scale-105 opacity-50 dark:opacity-35 filter brightness-105 contrast-90 blur-[2.5px]"
                 : homeScope === "spain"
                 ? "scale-105 opacity-50 dark:opacity-35 filter brightness-105 contrast-90 blur-[2.5px]"
+                : homeScope === "uk"
+                ? "scale-105 opacity-50 dark:opacity-35 filter brightness-105 contrast-90 blur-[2.5px]"
                 : "scale-105 opacity-45 dark:opacity-30 filter grayscale contrast-90 blur-[2.5px]"
             }`}
           />
@@ -1361,6 +1373,8 @@ export default function App() {
               ? "bg-emerald-50/65 dark:bg-slate-950/75"
               : homeScope === "spain"
               ? "bg-red-50/65 dark:bg-slate-950/75"
+              : homeScope === "uk"
+              ? "bg-indigo-50/65 dark:bg-slate-950/75"
               : homeScope === "world"
               ? "bg-[#e5f0fa]/70 dark:bg-slate-950/75"
               : "bg-[#dceee9]/65 dark:bg-slate-950/75"
@@ -1498,6 +1512,8 @@ export default function App() {
                         ? "text-emerald-600 dark:text-emerald-400"
                         : homeScope === "spain"
                         ? "text-red-600 dark:text-red-400"
+                        : homeScope === "uk"
+                        ? "text-indigo-600 dark:text-indigo-400"
                         : "text-slate-500 dark:text-slate-400"
                     }`}
                   >
@@ -1519,6 +1535,8 @@ export default function App() {
                       ? "이탈리아를 여행해요."
                       : homeScope === "spain"
                       ? "스페인을 여행해요."
+                      : homeScope === "uk"
+                      ? "영국을 여행해요."
                       : "전세계를 여행해요."}
                   </span>
                 </h2>
@@ -1674,6 +1692,8 @@ export default function App() {
                         ? "text-emerald-600 dark:text-emerald-400"
                         : homeScope === "spain"
                         ? "text-red-600 dark:text-red-400"
+                        : homeScope === "uk"
+                        ? "text-indigo-600 dark:text-indigo-400"
                         : homeScope === "random"
                         ? "text-purple-600 dark:text-purple-400"
                         : "text-slate-600 dark:text-slate-400"
@@ -1697,6 +1717,8 @@ export default function App() {
                           ? "이탈리아"
                           : homeScope === "spain"
                           ? "스페인"
+                          : homeScope === "uk"
+                          ? "영국"
                           : homeScope === "random"
                           ? "??? 올인원 랜덤"
                           : "전세계"
@@ -1773,6 +1795,10 @@ export default function App() {
                         setHomeScope("spain");
                         setStartingRegionId("random");
                         setSettings((p) => ({ ...p, level: "spain", regionGroup: "전체" }));
+                      } else if (scopeId === "uk") {
+                        setHomeScope("uk");
+                        setStartingRegionId("random");
+                        setSettings((p) => ({ ...p, level: "uk", regionGroup: "전체" }));
                       } else if (scopeId === "random") {
                         setHomeScope("random");
                         setStartingRegionId("random");
@@ -2181,6 +2207,44 @@ export default function App() {
                         </div>
                       </div>
                     </div>
+                  ) : homeScope === "uk" ? (
+                    <div className="space-y-2">
+                      <span className="text-[11px] font-bold text-indigo-700 dark:text-indigo-400 block">영국 구성국 및 주요 지역 ({UK_LIST.length}개 지역)</span>
+                      
+                      <div className="pt-0.5">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block">권역 필터</span>
+                          {isRankingChallenge && travelWay !== "quiz" && (
+                            <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400">🏆 랭킹 도전 시 '전체' 고정</span>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {["전체", "잉글랜드 남부", "잉글랜드 북부/중부", "스코틀랜드", "웨일스", "북아일랜드"].map((grp) => {
+                            const isLocked = isRankingChallenge && travelWay !== "quiz" && grp !== "전체";
+                            return (
+                              <button
+                                key={grp}
+                                type="button"
+                                disabled={isLocked}
+                                onClick={() => {
+                                  if (isLocked) return;
+                                  setSettings(p => ({ ...p, level: "uk", regionGroup: grp }));
+                                }}
+                                className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border transition-all ${
+                                  isLocked
+                                    ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-50 cursor-not-allowed"
+                                    : settings.regionGroup === grp
+                                    ? "bg-indigo-700 text-white border-indigo-700 font-extrabold shadow-sm cursor-pointer"
+                                    : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                                }`}
+                              >
+                                {grp}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
                   ) : (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -2259,6 +2323,8 @@ export default function App() {
                                   ? "bg-emerald-600 text-white shadow-sm font-black"
                                   : homeScope === "spain" || settings.level === "spain"
                                   ? "bg-red-600 text-white shadow-sm font-black"
+                                  : homeScope === "uk" || settings.level === "uk"
+                                  ? "bg-indigo-700 text-white shadow-sm font-black"
                                   : homeScope === "world" || settings.level === "world"
                                   ? "bg-slate-700 text-white shadow-sm font-black"
                                   : homeScope === "japan" || settings.level === "japan"
@@ -2423,6 +2489,8 @@ export default function App() {
                               ? "bg-emerald-600 hover:bg-emerald-500 text-white font-black shadow-emerald-500/20"
                               : homeScope === "spain" || settings.level === "spain"
                               ? "bg-red-600 hover:bg-red-500 text-white font-black shadow-red-500/20"
+                              : homeScope === "uk" || settings.level === "uk"
+                              ? "bg-indigo-700 hover:bg-indigo-600 text-white font-black shadow-indigo-500/20"
                               : homeScope === "world" || settings.level === "world"
                               ? "bg-slate-600 hover:bg-slate-500 text-white"
                               : "bg-emerald-600 hover:bg-emerald-500 text-white"
@@ -2449,6 +2517,13 @@ export default function App() {
                   onSetNickname={setNickname}
                   onBackToHome={() => setHomeTab("single")}
                   homeScope={homeScope}
+                  existingRoom={multiplayerRoom}
+                  existingRoomState={multiplayerRoomState}
+                  onLeaveRoom={() => {
+                    setMultiplayerRoom(null);
+                    setMultiplayerRoomState(null);
+                    setActiveMode(null);
+                  }}
                   allRegionsData={{
                     sido: SIDO_LIST,
                     sigungu: SIGUNGU_LIST,
@@ -2460,6 +2535,7 @@ export default function App() {
                     france: FRANCE_LIST,
                     italy: ITALY_LIST,
                     spain: SPAIN_LIST,
+                    uk: UK_LIST,
                     world: WORLD_LIST,
                   }}
                   onStartMultiplayerGame={(room, initialRoomState) => {
@@ -2745,6 +2821,23 @@ export default function App() {
                     <span className="text-xs font-bold">🇪🇸 스페인 19개 자치지방</span>
                     <span className={`text-[10px] ${settings.level === "spain" ? "text-red-100 font-bold" : "text-slate-400 dark:text-slate-500"}`}>
                       마드리드, 바르셀로나, 세비야 등
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSettings((prev) => ({ ...prev, level: "uk", regionGroup: "전체" }));
+                      setHomeScope("uk");
+                    }}
+                    className={`p-3 rounded-2xl text-center border transition-all duration-300 flex flex-col gap-1 items-center justify-center cursor-pointer ${
+                      settings.level === "uk"
+                        ? "bg-indigo-700 border-indigo-700 text-white font-black shadow-md"
+                        : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200"
+                    }`}
+                  >
+                    <span className="text-xs font-bold">🇬🇧 영국 12개 주요 지역</span>
+                    <span className={`text-[10px] ${settings.level === "uk" ? "text-indigo-100 font-bold" : "text-slate-400 dark:text-slate-500"}`}>
+                      런던, 스코틀랜드, 웨일스 등
                     </span>
                   </button>
 
@@ -3050,6 +3143,7 @@ export default function App() {
           const isFrance = settings.level === "france" || homeScope === "france";
           const isItaly = settings.level === "italy" || homeScope === "italy";
           const isSpain = settings.level === "spain" || homeScope === "spain";
+          const isUk = settings.level === "uk" || homeScope === "uk";
           const isWorld = settings.level === "world" || homeScope === "world";
 
           const countdownNumColor = isJapan
@@ -3068,6 +3162,8 @@ export default function App() {
             ? "text-emerald-600 dark:text-emerald-400 font-extrabold drop-shadow-[0_0_25px_rgba(5,150,105,0.5)]"
             : isSpain
             ? "text-red-600 dark:text-red-400 font-extrabold drop-shadow-[0_0_25px_rgba(220,38,38,0.5)]"
+            : isUk
+            ? "text-indigo-600 dark:text-indigo-400 font-extrabold drop-shadow-[0_0_25px_rgba(79,70,229,0.5)]"
             : isWorld
             ? "text-slate-800 dark:text-slate-100"
             : "text-emerald-600 dark:text-emerald-400";
@@ -3088,6 +3184,8 @@ export default function App() {
             ? "bg-emerald-500/25"
             : isSpain
             ? "bg-red-500/25"
+            : isUk
+            ? "bg-indigo-500/25"
             : isWorld
             ? "bg-slate-500/10"
             : "bg-emerald-500/15";
@@ -3108,6 +3206,8 @@ export default function App() {
             ? "text-emerald-600 dark:text-emerald-400 font-black"
             : isSpain
             ? "text-red-600 dark:text-red-400 font-black"
+            : isUk
+            ? "text-indigo-600 dark:text-indigo-400 font-black"
             : isWorld
             ? "text-slate-600 dark:text-slate-400"
             : "text-emerald-600 dark:text-emerald-400";
@@ -3136,6 +3236,8 @@ export default function App() {
                     ? "🇮🇹 이탈리아 20개 주(Regioni) 주행 시작"
                     : isSpain
                     ? "🇪🇸 스페인 19개 자치지방·도시 주행 시작"
+                    : isUk
+                    ? "🇬🇧 영국 113개 자치구·카운티 주행 시작"
                     : isWorld
                     ? "🌐 전세계 주요국 주행 시작"
                     : "🚩 대한민국 행정구역 주행 시작"}
@@ -3181,46 +3283,53 @@ export default function App() {
                   </span>
                 </div>
 
-                {/* Horizontal grid list of players in current room */}
+                {/* Horizontal grid list of players in current room - Stable sorting without jitter */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto no-scrollbar">
                   {(Object.values(multiplayerRoomState.players || {}) as PlayerState[])
                     .filter(Boolean)
-                    .sort((a: PlayerState, b: PlayerState) => (b.currentIndex || 0) - (a.currentIndex || 0) || (b.cpm || 0) - (a.cpm || 0))
+                    .sort((a: PlayerState, b: PlayerState) => {
+                      if (a.finished !== b.finished) {
+                        return a.finished ? -1 : 1;
+                      }
+                      const diff = (b.currentIndex || 0) - (a.currentIndex || 0);
+                      if (diff !== 0) return diff;
+                      return (a.id || "").localeCompare(b.id || "");
+                    })
                     .map((p: PlayerState, idx: number) => {
                       const isMe = p.id === multiplayerRoom?.getMyPlayerId();
                       const total = p.totalStations || coursePath.length || 1;
-                      const progressPct = Math.min(100, Math.round((((p.currentIndex || 0) + (p.finished ? 1 : 0)) / total) * 100));
+                      const progressPct = Math.min(100, Math.max(0, Math.round((((p.currentIndex || 0) + (p.finished ? 1 : 0)) / total) * 100)));
 
                       return (
                         <div
                           key={p.id}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors ${
                             isMe
                               ? "bg-emerald-50 dark:bg-emerald-950/80 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100 shadow-xs"
                               : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
                           }`}
                         >
-                          <span className="w-5 text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-black shrink-0">
+                          <span className="w-6 text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-black shrink-0">
                             {idx + 1}위
                           </span>
-                          <span className="w-20 sm:w-24 truncate text-left text-xs font-black shrink-0">
+                          <span className="w-20 sm:w-24 truncate text-left text-xs font-black shrink-0 whitespace-nowrap">
                             {p.nickname} {isMe ? "(나)" : ""}
                           </span>
 
-                          {/* Progress bar */}
+                          {/* Progress bar with smooth width transition only */}
                           <div className="flex-1 bg-slate-200 dark:bg-slate-950 rounded-full h-3.5 overflow-hidden border border-slate-300 dark:border-slate-800 relative">
                             <div
-                              className={`h-full transition-all duration-300 rounded-full ${
+                              className={`h-full transition-[width] duration-300 ease-out rounded-full ${
                                 isMe ? "bg-emerald-500" : "bg-cyan-500"
                               }`}
                               style={{ width: `${progressPct}%` }}
                             />
-                            <span className="absolute inset-0 flex items-center justify-center text-[9px] font-mono font-black text-slate-800 dark:text-white drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
+                            <span className="absolute inset-0 flex items-center justify-center text-[9px] font-mono font-black text-slate-800 dark:text-white drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] whitespace-nowrap pointer-events-none">
                               {p.finished ? "🏆 완주!" : `${p.currentIndex}/${total}`}
                             </span>
                           </div>
 
-                          <span className="w-14 text-right font-mono text-[10px] text-slate-300 font-bold shrink-0">
+                          <span className="w-14 text-right font-mono text-[10px] text-slate-500 dark:text-slate-300 font-bold shrink-0">
                             {p.cpm || 0} CPM
                           </span>
                         </div>
@@ -3946,6 +4055,7 @@ export default function App() {
         franceList={FRANCE_LIST}
         italyList={ITALY_LIST}
         spainList={SPAIN_LIST}
+        ukList={UK_LIST}
         worldList={WORLD_LIST}
         modeColors={settings.modeColors}
         worldFillMode={settings.worldFillMode}

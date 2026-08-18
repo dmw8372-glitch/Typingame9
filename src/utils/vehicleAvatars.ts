@@ -180,6 +180,20 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-red-500/30",
     };
   }
+  if (regionLevel === "uk") {
+    return {
+      primary: "#1e3a8a",
+      dark: "#0f172a",
+      light: "#dbeafe",
+      glass: "#3b82f6",
+      eye: "#bfdbfe",
+      tailwindBorder: "border-indigo-500",
+      tailwindBg: "bg-indigo-50 dark:bg-indigo-950/40",
+      tailwindText: "text-indigo-700 dark:text-indigo-400",
+      tailwindPill: "bg-indigo-700 text-white font-bold",
+      tailwindRipple: "bg-indigo-500/30",
+    };
+  }
   if (regionLevel === "world") {
     return {
       primary: "#64748b",
@@ -392,7 +406,7 @@ export function getMapVehicleMarkerHtml(
   const exprHtml = getExpressionHtml(customConfig?.expression || "happy", eyeColor);
   const accHtml = getAccessoryHtml(customConfig?.accessory || "none");
 
-  const effectiveVehicle = (customConfig?.baseType || ((vehicleType as string) === "custom_draw" ? "person" : vehicleType)) as VehicleType;
+  const effectiveVehicle = ((vehicleType as string) === "custom_draw" ? (customConfig?.baseType || "person") : vehicleType) as VehicleType;
 
   let avatarInnerHtml = "";
 

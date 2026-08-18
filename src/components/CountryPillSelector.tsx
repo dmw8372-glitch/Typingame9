@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface CountryOption {
-  id: "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world";
+  id: "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world";
   name_kr: string;
   name_en: string;
   code: string; // ISO 2 code for flagcdn
@@ -81,6 +81,14 @@ export const COUNTRY_OPTIONS: CountryOption[] = [
     code: "es",
     activeBg: "bg-red-600",
     ringColor: "ring-red-500/40 shadow-red-600/40",
+  },
+  {
+    id: "uk",
+    name_kr: "영국",
+    name_en: "United Kingdom",
+    code: "gb",
+    activeBg: "bg-indigo-700",
+    ringColor: "ring-indigo-500/40 shadow-indigo-600/40",
   },
   {
     id: "world",

@@ -17,6 +17,9 @@ export function getCountryFlagUrl(id: string | undefined | null): string | null 
   if (code.startsWith("china_") || code.startsWith("cn_")) return `https://flagcdn.com/w40/cn.png`;
   if (code.startsWith("germany_") || code.startsWith("de_")) return `https://flagcdn.com/w40/de.png`;
   if (code.startsWith("france_") || code.startsWith("fr_")) return `https://flagcdn.com/w40/fr.png`;
+  if (code.startsWith("italy_") || code.startsWith("it_")) return `https://flagcdn.com/w40/it.png`;
+  if (code.startsWith("spain_") || code.startsWith("es_")) return `https://flagcdn.com/w40/es.png`;
+  if (code.startsWith("uk_") || code.startsWith("gb_")) return `https://flagcdn.com/w40/gb.png`;
   if (
     code.startsWith("seoul_") ||
     code.startsWith("gyeonggi_") ||

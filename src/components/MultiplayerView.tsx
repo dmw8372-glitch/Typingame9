@@ -3,9 +3,25 @@ import { Users, Play, Copy, Check, ArrowLeft, Crown, Zap, Flag, RefreshCw, Lock,
 import { MultiplayerRoom, RoomState, PlayerState, LobbyTracker, PublicRoomInfo } from "../lib/multiplayer";
 import { Region } from "../types";
 
-export type ModeScope = "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world" | "sido" | "sigungu";
+export type ModeScope = "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world" | "sido" | "sigungu";
 
 export const getMultiplayerTheme = (scopeOrLevel?: string) => {
+  if (scopeOrLevel === "uk") {
+    return {
+      primaryBtn: "bg-indigo-700 hover:bg-indigo-600 text-white shadow-md shadow-indigo-700/20",
+      primaryBg: "bg-indigo-700",
+      border: "border-indigo-200 dark:border-indigo-800/80",
+      lightCardBg: "bg-gradient-to-br from-indigo-50 via-blue-50/50 to-sky-50 dark:from-indigo-950/40 dark:via-indigo-950/20 dark:to-blue-950/20 border-indigo-200/90 dark:border-indigo-800/80",
+      badgeBg: "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800",
+      badgeIcon: "text-indigo-600 dark:text-indigo-400",
+      accentText: "text-indigo-600 dark:text-indigo-400",
+      focusRing: "focus:ring-indigo-500/20 focus:border-indigo-500",
+      avatarBg: "bg-indigo-100 dark:bg-indigo-950/80 text-indigo-800 dark:text-indigo-200",
+      activeTabBtn: "bg-indigo-700 text-white border-indigo-700 shadow-sm",
+      joinBtn: "bg-indigo-900 dark:bg-indigo-700 dark:hover:bg-indigo-600 hover:bg-indigo-800 text-white",
+      progressBg: "bg-indigo-600",
+    };
+  }
   if (scopeOrLevel === "spain") {
     return {
       primaryBtn: "bg-red-600 hover:bg-red-500 text-white shadow-md shadow-red-600/20",
@@ -178,6 +194,7 @@ export interface AllRegionsData {
   france?: Region[];
   italy?: Region[];
   spain?: Region[];
+  uk?: Region[];
   world: Region[];
 }
 
@@ -186,7 +203,10 @@ interface MultiplayerViewProps {
   onSetNickname: (nick: string) => void;
   onBackToHome: () => void;
   allRegionsData: AllRegionsData;
-  homeScope?: "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "world";
+  homeScope?: "korea" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world";
+  existingRoom?: MultiplayerRoom | null;
+  existingRoomState?: RoomState | null;
+  onLeaveRoom?: () => void;
   onStartMultiplayerGame: (room: MultiplayerRoom, initialRoomState: RoomState) => void;
 }
 
@@ -264,9 +284,10 @@ const generateCourseForPool = (pool: Region[], limit: number): Region[] => {
   return path;
 };
 
-const LEVEL_OPTIONS: { id: "sido" | "sigungu" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world"; label: string; flag: string }[] = [
+const LEVEL_OPTIONS: { id: "sido" | "sigungu" | "uk" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world"; label: string; flag: string }[] = [
   { id: "sido", label: "한국 광역지자체 (17)", flag: "🇰🇷" },
   { id: "sigungu", label: "한국 시·군·구 (229)", flag: "🇰🇷" },
+  { id: "uk", label: "영국 113 구성국 및 주요 지역 (113)", flag: "🇬🇧" },
   { id: "spain", label: "스페인 자치지방 (19)", flag: "🇪🇸" },
   { id: "italy", label: "이탈리아 20개 주 (20)", flag: "🇮🇹" },
   { id: "france", label: "프랑스 18개 레지옹 (18)", flag: "🇫🇷" },
@@ -284,13 +305,50 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
   onBackToHome,
   allRegionsData,
   homeScope = "korea",
+  existingRoom,
+  existingRoomState,
+  onLeaveRoom,
   onStartMultiplayerGame,
 }) => {
   const [userNick, setUserNick] = useState(nickname || "");
   const [roomCodeInput, setRoomCodeInput] = useState("");
-  const [activeRoom, setActiveRoom] = useState<MultiplayerRoom | null>(null);
-  const [roomState, setRoomState] = useState<RoomState | null>(null);
+  const [activeRoom, setActiveRoom] = useState<MultiplayerRoom | null>(existingRoom || null);
+  const [roomState, setRoomState] = useState<RoomState | null>(existingRoomState || null);
   const [copied, setCopied] = useState(false);
+  const [customInputVal, setCustomInputVal] = useState<string | null>(null);
+
+  // Sync if existingRoom or existingRoomState is passed/updated
+  useEffect(() => {
+    if (existingRoom) {
+      setActiveRoom(existingRoom);
+      existingRoom.init(
+        (updatedRoom) => {
+          setRoomState(updatedRoom);
+        },
+        (stations) => {
+          setRoomState((prev) => {
+            const latestState: RoomState = prev
+              ? { ...prev, isStarted: true, stations }
+              : {
+                  roomCode: existingRoom.roomCode,
+                  roomName: existingRoom.roomName || "타이핑 대전방",
+                  level: selectedLevel,
+                  targetCount: selectedTargetCount,
+                  isStarted: true,
+                  isPublic: true,
+                  stations,
+                  players: {},
+                };
+            onStartMultiplayerGame(existingRoom, latestState);
+            return latestState;
+          });
+        }
+      );
+    }
+    if (existingRoomState) {
+      setRoomState(existingRoomState);
+    }
+  }, [existingRoom, existingRoomState]);
 
   // Room Creation Options
   const [createRoomName, setCreateRoomName] = useState("");
@@ -335,8 +393,10 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
   }, []);
 
   // Selected level derived from top scope and Korea sub-level choice
-  const selectedLevel: "sido" | "sigungu" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world" =
-    homeScope === "spain"
+  const selectedLevel: "sido" | "sigungu" | "uk" | "spain" | "italy" | "france" | "germany" | "japan" | "usa" | "china" | "vietnam" | "world" =
+    homeScope === "uk"
+      ? "uk"
+      : homeScope === "spain"
       ? "spain"
       : homeScope === "japan"
       ? "japan"
@@ -359,7 +419,9 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
   // Active theme based on top level selection or room level
   const activeLevel = roomState?.level || selectedLevel;
   const activeThemeKey =
-    activeLevel === "spain"
+    activeLevel === "uk"
+      ? "uk"
+      : activeLevel === "spain"
       ? "spain"
       : activeLevel === "italy"
       ? "italy"
@@ -525,6 +587,8 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
 
   const getCourseBadgeText = (level: string) => {
     switch (level) {
+      case "uk":
+        return "🇬🇧 영국";
       case "spain":
         return "🇪🇸 스페인";
       case "italy":
@@ -564,6 +628,9 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
               activeRoom.leave();
               setActiveRoom(null);
               setRoomState(null);
+              if (onLeaveRoom) {
+                onLeaveRoom();
+              }
             }}
             className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
           >
@@ -688,10 +755,10 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
             </span>
           </div>
 
-          {/* Target Station Count Preset Selection Buttons */}
+          {/* Target Station Count Preset Selection Buttons (10개, 16개, 30개 - No extra labels) */}
           <div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              {[10, 15, 20, 30].map((cnt) => {
+            <div className="grid grid-cols-3 gap-2.5">
+              {[10, 16, 30].map((cnt) => {
                 const isSelected = Number(roomState.targetCount) === Number(cnt);
                 return (
                   <button
@@ -702,6 +769,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                       if (!isHost) return;
                       const numCnt = Number(cnt);
                       setSelectedTargetCount(numCnt);
+                      setCustomInputVal(null);
                       setRoomState((prev) => (prev ? { ...prev, targetCount: numCnt } : null));
                       activeRoom.updateRoomConfig(roomState.level, numCnt, roomState.isPublic, roomState.roomName);
                     }}
@@ -712,16 +780,13 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                     } ${!isHost ? "cursor-not-allowed opacity-90" : ""}`}
                   >
                     {isSelected && <Check className="w-4 h-4 text-white stroke-[3]" />}
-                    <span>{cnt}개 역</span>
-                    <span className="text-[10px] opacity-90 font-normal">
-                      {cnt === 10 ? "(스피드)" : cnt === 15 ? "(Standard)" : cnt === 20 ? "(추천)" : cnt === 30 ? "(마라톤)" : ""}
-                    </span>
+                    <span>{cnt}개</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Custom Input for Host */}
+            {/* Custom Input for Host (0 ~ 250 range) */}
             {isHost && (
               <div className="mt-3.5 pt-3 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center gap-2.5">
                 <span className="text-xs font-bold text-slate-600 dark:text-slate-300 shrink-0">
@@ -730,21 +795,36 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                 <div className="relative flex items-center gap-2">
                   <input
                     type="number"
-                    min={3}
+                    min={0}
                     max={250}
-                    value={roomState.targetCount}
+                    value={customInputVal !== null ? customInputVal : (roomState.targetCount ?? "")}
+                    placeholder="0~250"
                     onChange={(e) => {
-                      const val = parseInt(e.target.value, 10);
-                      if (!isNaN(val) && val >= 3) {
+                      const str = e.target.value;
+                      setCustomInputVal(str);
+                      const val = parseInt(str, 10);
+                      if (!isNaN(val) && val >= 0 && val <= 250) {
                         setSelectedTargetCount(val);
                         setRoomState((prev) => (prev ? { ...prev, targetCount: val } : null));
                         activeRoom.updateRoomConfig(roomState.level, val, roomState.isPublic, roomState.roomName);
+                      } else if (str === "") {
+                        setSelectedTargetCount(0);
+                        setRoomState((prev) => (prev ? { ...prev, targetCount: 0 } : null));
+                      }
+                    }}
+                    onBlur={() => {
+                      setCustomInputVal(null);
+                      if (roomState.targetCount === undefined || isNaN(roomState.targetCount) || roomState.targetCount < 0) {
+                        const fallback = 16;
+                        setSelectedTargetCount(fallback);
+                        setRoomState((prev) => (prev ? { ...prev, targetCount: fallback } : null));
+                        activeRoom.updateRoomConfig(roomState.level, fallback, roomState.isPublic, roomState.roomName);
                       }
                     }}
                     className="w-28 px-3 py-2 text-xs font-black bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-600 rounded-xl text-slate-900 dark:text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
                   />
                   <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                    개 역 (3 ~ 250개 입력 가능)
+                    개 (0 ~ 250개 입력 가능)
                   </span>
                 </div>
               </div>
@@ -752,7 +832,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
           </div>
         </div>
 
-        {/* Players List */}
+        {/* Players List with "플레이중" Indicator */}
         <div className="mt-6">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
@@ -762,33 +842,50 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {playersList.map((player) => (
-              <div
-                key={player.id}
-                className="p-3.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-between shadow-sm"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-9 h-9 ${theme.avatarBg} rounded-xl flex items-center justify-center font-bold text-sm`}>
-                    {(player.nickname || "무명").substring(0, 2)}
-                  </div>
-                  <div>
-                    <span className="text-xs font-black text-slate-900 dark:text-slate-100 block flex items-center gap-1">
-                      {player.nickname || "무명 운행사"}
-                      {player.isHost && (
-                        <Crown className="w-3.5 h-3.5 fill-amber-400 text-amber-500 inline" />
-                      )}
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
-                      {player.id === activeRoom.getMyPlayerId() ? "(나)" : "참여자"}
-                    </span>
-                  </div>
-                </div>
+            {playersList.map((player) => {
+              const isPlaying = Boolean(
+                !player.finished && (roomState.isStarted || (player.currentIndex !== undefined && player.currentIndex > 0))
+              );
 
-                <span className={`text-[11px] font-bold px-2.5 py-1 ${theme.badgeBg} rounded-lg border`}>
-                  준비완료
-                </span>
-              </div>
-            ))}
+              return (
+                <div
+                  key={player.id}
+                  className="p-3.5 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl flex items-center justify-between shadow-sm"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-9 h-9 ${theme.avatarBg} rounded-xl flex items-center justify-center font-bold text-sm`}>
+                      {(player.nickname || "무명").substring(0, 2)}
+                    </div>
+                    <div>
+                      <span className="text-xs font-black text-slate-900 dark:text-slate-100 block flex items-center gap-1">
+                        {player.nickname || "무명 운행사"}
+                        {player.isHost && (
+                          <Crown className="w-3.5 h-3.5 fill-amber-400 text-amber-500 inline" />
+                        )}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        {player.id === activeRoom.getMyPlayerId() ? "(나)" : "참여자"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {player.finished ? (
+                    <span className="text-[11px] font-bold px-2.5 py-1 bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700 rounded-lg">
+                      🏆 완주
+                    </span>
+                  ) : isPlaying ? (
+                    <span className="text-[11px] font-bold px-2.5 py-1 bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 border border-sky-300 dark:border-sky-700 rounded-lg animate-pulse flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-sky-500 animate-ping inline-block" />
+                      플레이중
+                    </span>
+                  ) : (
+                    <span className={`text-[11px] font-bold px-2.5 py-1 ${theme.badgeBg} rounded-lg border`}>
+                      준비완료
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 

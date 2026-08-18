@@ -13,6 +13,7 @@ import { GERMANY_LIST as RAW_GERMANY_LIST } from "./germanyRegions";
 import { FRANCE_LIST as RAW_FRANCE_LIST } from "./franceRegions";
 import { ITALY_LIST as RAW_ITALY_LIST } from "./italyRegions";
 import { SPAIN_REGIONS as RAW_SPAIN_LIST } from "./spainRegions";
+import { UK_REGIONS as RAW_UK_LIST } from "./ukRegions";
 
 export const REGIONS: Region[] = [
   // ==========================================
@@ -483,6 +484,7 @@ export const GERMANY_LIST = cleanRegionList(RAW_GERMANY_LIST);
 export const FRANCE_LIST = cleanRegionList(RAW_FRANCE_LIST);
 export const ITALY_LIST = cleanRegionList(RAW_ITALY_LIST);
 export const SPAIN_LIST = cleanRegionList(RAW_SPAIN_LIST);
+export const UK_LIST = cleanRegionList(RAW_UK_LIST);
 
 // Combine all regions with sanitized English names
 export const ALL_REGIONS = [
@@ -496,6 +498,7 @@ export const ALL_REGIONS = [
   ...FRANCE_LIST,
   ...ITALY_LIST,
   ...SPAIN_LIST,
+  ...UK_LIST,
 ];
 
 // Grouping helpers

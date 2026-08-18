@@ -8,7 +8,7 @@ import L from "leaflet";
 import { ZoomIn, ZoomOut, Compass, Navigation } from "lucide-react";
 import { Region, ModeColors, WorldFillMode, MapStyle, DEFAULT_MODE_COLORS, CustomVehicleConfig } from "../types";
 import { WORLD_COUNTRIES } from "../data/worldCountries";
-import { ALL_REGIONS, SIDO_LIST, SIGUNGU_LIST, JAPAN_LIST, USA_LIST, CHINA_LIST, VIETNAM_LIST, GERMANY_LIST, FRANCE_LIST, ITALY_LIST, SPAIN_LIST } from "../data/regions";
+import { ALL_REGIONS, SIDO_LIST, SIGUNGU_LIST, JAPAN_LIST, USA_LIST, CHINA_LIST, VIETNAM_LIST, GERMANY_LIST, FRANCE_LIST, ITALY_LIST, SPAIN_LIST, UK_LIST } from "../data/regions";
 import { PlayerState } from "../lib/multiplayer";
 import { VehicleType, getMapVehicleMarkerHtml } from "../utils/vehicleAvatars";
 import { CountryFlag } from "./CountryFlag";
@@ -78,6 +78,7 @@ const MapComponent: React.FC<MapProps> = ({
     if (level === "france") return activeModeColors.france || DEFAULT_MODE_COLORS.france;
     if (level === "italy") return activeModeColors.italy || DEFAULT_MODE_COLORS.italy;
     if (level === "spain") return activeModeColors.spain || DEFAULT_MODE_COLORS.spain;
+    if (level === "uk") return activeModeColors.uk || DEFAULT_MODE_COLORS.uk;
     if (level === "world") return activeModeColors.world || DEFAULT_MODE_COLORS.world;
     return activeModeColors.korea || DEFAULT_MODE_COLORS.korea;
   };
@@ -162,6 +163,7 @@ const MapComponent: React.FC<MapProps> = ({
     const isFranceMode = effectiveLevel === "france";
     const isItalyMode = effectiveLevel === "italy";
     const isSpainMode = effectiveLevel === "spain";
+    const isUkMode = effectiveLevel === "uk";
 
     const hasValidActiveCoords =
       activeRegion &&
@@ -188,10 +190,12 @@ const MapComponent: React.FC<MapProps> = ({
       ? [41.8719, 12.5674]
       : isSpainMode
       ? [40.4637, -3.7492]
+      : isUkMode
+      ? [54.5, -3.0]
       : isVietnamMode
       ? [15.8, 107.5]
       : [36.2, 127.8];
-    const initialZoom = isWorldMode ? 3 : isChinaMode ? 4 : isUsaMode ? 4 : (isGermanyMode || isFranceMode || isItalyMode || isSpainMode) ? 6 : isVietnamMode ? 6.5 : isJapanMode ? 6 : 8;
+    const initialZoom = isWorldMode ? 3 : isChinaMode ? 4 : isUsaMode ? 4 : (isGermanyMode || isFranceMode || isItalyMode || isSpainMode || isUkMode) ? 6 : isVietnamMode ? 6.5 : isJapanMode ? 6 : 8;
 
     try {
       // Create leaflet map instance
@@ -344,6 +348,7 @@ const MapComponent: React.FC<MapProps> = ({
         const isFrance = activeRegion.level === "france";
         const isItaly = activeRegion.level === "italy";
         const isSpain = activeRegion.level === "spain";
+        const isUk = activeRegion.level === "uk";
 
         const regId = (activeRegion.id || "").toLowerCase();
         const isMicrostate = ["va", "mc", "sm", "li", "ad", "mt", "sg", "bh", "mv", "bb", "ag", "dm", "gd", "kn", "lc", "vc", "st", "nr", "tv", "pw", "hk", "mo"].includes(regId);
@@ -370,6 +375,8 @@ const MapComponent: React.FC<MapProps> = ({
           targetZoom = 6.5;
         } else if (isItaly) {
           targetZoom = 6.5;
+        } else if (isUk) {
+          targetZoom = 7.5;
         } else if (isSpain) {
           if (["es_ceuta", "es_melilla"].includes(regId)) {
             targetZoom = 11;
@@ -493,7 +500,36 @@ const MapComponent: React.FC<MapProps> = ({
     const isFranceMode = currentLevel === "france" || String(props.id || "").startsWith("fr_") || String(props.iso_3166_2 || "").startsWith("FR-");
     const isItalyMode = currentLevel === "italy" || String(props.id || "").startsWith("it_") || String(props.iso_3166_2 || "").startsWith("IT-");
     const isSpainMode = currentLevel === "spain" || String(props.id || "").startsWith("es_") || Boolean(props.cod_ccaa);
+    const isUkMode = currentLevel === "uk" || String(props.id || "").startsWith("uk_") || String(props.region_id || "").startsWith("uk_") || Boolean(props.CTYUA23CD);
     const isWorldMode = currentLevel === "world" || Boolean(props.ADM0_A3 || props["ISO3166-1-Alpha-2"] || props.ISO_A2);
+
+    if (isUkMode) {
+      const pool = UK_LIST;
+      const pId = String(props.id || props.region_id || props.ID || feature.id || "").toLowerCase().trim();
+      if (pId) {
+        const cleanId = pId.replace("uk-", "").replace("uk_", "");
+        const foundById = pool.find((r) => {
+          const rId = r.id.toLowerCase();
+          return rId === pId || rId === `uk_${cleanId}` || rId.replace("uk_", "") === cleanId;
+        });
+        if (foundById) return foundById;
+      }
+      const ctyua = String(props.CTYUA23CD || props.ctyua23cd || "").toLowerCase().trim();
+      if (ctyua) {
+        const foundByCode = pool.find((r) => r.id.toLowerCase().includes(ctyua));
+        if (foundByCode) return foundByCode;
+      }
+      const pNam = String(props.name || props.NAME || props.name_en || props.name_kr || props.CTYUA23NM || props.ctyua23nm || "").toLowerCase().trim();
+      if (pNam) {
+        const cleanPNam = pNam.replace(/[\s.,'\-]+/g, "");
+        const found = pool.find((r) => {
+          const en = r.name_en.toLowerCase().replace(/[\s.,'\-]+/g, "");
+          const kr = r.name_kr.toLowerCase().trim();
+          return cleanPNam === en || cleanPNam === kr || cleanPNam.includes(en) || en.includes(cleanPNam) || cleanPNam.includes(kr);
+        });
+        if (found) return found;
+      }
+    }
 
     if (isSpainMode) {
       const pool = SPAIN_LIST;
@@ -912,7 +948,7 @@ const MapComponent: React.FC<MapProps> = ({
       return {
         fillColor: modeVisitedColor,
         fillOpacity: 0.95,
-        color: currentLevel === "spain" ? "#991b1b" : currentLevel === "italy" ? "#065f46" : currentLevel === "france" ? "#1e3a8a" : currentLevel === "germany" ? "#854d0e" : currentLevel === "vietnam" ? "#ffffff" : currentLevel === "japan" ? "#881337" : currentLevel === "usa" ? "#1e3a8a" : currentLevel === "china" ? "#78350f" : "#0f172a",
+        color: currentLevel === "spain" ? "#991b1b" : currentLevel === "italy" ? "#065f46" : currentLevel === "france" ? "#1e3a8a" : currentLevel === "germany" ? "#854d0e" : currentLevel === "vietnam" ? "#ffffff" : currentLevel === "japan" ? "#881337" : currentLevel === "usa" ? "#1e3a8a" : currentLevel === "china" ? "#78350f" : currentLevel === "uk" ? "#312e81" : "#0f172a",
         weight: 3,
       };
     } else if (isVisited) {
@@ -977,6 +1013,14 @@ const MapComponent: React.FC<MapProps> = ({
           fillColor: "#ffffff",
           fillOpacity: 0.65,
           color: "#fca5a5",
+          weight: 1.2,
+        };
+      }
+      if (currentLevel === "uk") {
+        return {
+          fillColor: "#ffffff",
+          fillOpacity: 0.65,
+          color: "#a5b4fc",
           weight: 1.2,
         };
       }
@@ -1046,6 +1090,8 @@ const MapComponent: React.FC<MapProps> = ({
           ? "/geojson/italy-regions.json"
           : currentLevel === "spain"
           ? "/geojson/spain-regions.json"
+          : currentLevel === "uk"
+          ? "/geojson/uk-regions.json"
           : "/geojson/world.json";
 
       fetch(jsonUrl)
@@ -1161,6 +1207,7 @@ const MapComponent: React.FC<MapProps> = ({
     const isFranceMode = currentLevel === "france";
     const isItalyMode = currentLevel === "italy";
     const isSpainMode = currentLevel === "spain";
+    const isUkMode = currentLevel === "uk";
     const isWorldMode = currentLevel === "world";
 
     // -- B. Draw Rail Track Lines --
@@ -1285,6 +1332,8 @@ const MapComponent: React.FC<MapProps> = ({
           ? "bg-emerald-500/40"
           : isSpainMode
           ? "bg-red-500/40"
+          : isUkMode
+          ? "bg-indigo-500/40"
           : isWorldMode
           ? "bg-slate-500/40"
           : "bg-emerald-500/40";
@@ -1303,6 +1352,8 @@ const MapComponent: React.FC<MapProps> = ({
           ? "bg-emerald-600"
           : isSpainMode
           ? "bg-red-600"
+          : isUkMode
+          ? "bg-indigo-600"
           : isWorldMode
           ? "bg-slate-600"
           : "bg-emerald-600";
@@ -1465,7 +1516,7 @@ const MapComponent: React.FC<MapProps> = ({
         }
       });
     }
-  }, [regions, activeRegion, visitedRegions, courseHistory, upcomingRegions, multiplayerPlayers, myPlayerId, coursePath, modeColors, worldFillMode]);
+  }, [regions, activeRegion, visitedRegions, courseHistory, upcomingRegions, multiplayerPlayers, myPlayerId, coursePath, modeColors, worldFillMode, vehicleType, customVehicleConfig, displayLanguage, regionLevel]);
 
   // Handle Zoom adjustments manually
   const handleZoomIn = () => {
@@ -1488,7 +1539,11 @@ const MapComponent: React.FC<MapProps> = ({
       const isUsa = activeRegion.level === "usa";
       const isJapan = activeRegion.level === "japan";
       const isVietnam = activeRegion.level === "vietnam";
-      const targetZoom = isWorld ? 3 : isChina ? 5 : isUsa ? 5 : isVietnam ? 5 : isJapan ? 6 : 8;
+      const isFrance = activeRegion.level === "france";
+      const isItaly = activeRegion.level === "italy";
+      const isSpain = activeRegion.level === "spain";
+      const isUk = activeRegion.level === "uk";
+      const targetZoom = isWorld ? 3 : isChina ? 5 : isUsa ? 5 : isVietnam ? 5 : (isFrance || isItaly || isSpain || isUk) ? 6.5 : isJapan ? 6 : 8;
       mapRef.current?.setView([activeRegion.lat, activeRegion.lng], targetZoom);
     } else {
       const currentLevel = regionLevel || (regions && regions[0]?.level);
@@ -1496,6 +1551,11 @@ const MapComponent: React.FC<MapProps> = ({
       else if (currentLevel === "usa") mapRef.current?.setView([37.0, -95.7], 4);
       else if (currentLevel === "japan") mapRef.current?.setView([36.2, 138.2], 6);
       else if (currentLevel === "vietnam") mapRef.current?.setView([15.8, 107.5], 5);
+      else if (currentLevel === "france") mapRef.current?.setView([46.6, 1.9], 6);
+      else if (currentLevel === "germany") mapRef.current?.setView([51.2, 10.4], 6);
+      else if (currentLevel === "italy") mapRef.current?.setView([41.9, 12.6], 6);
+      else if (currentLevel === "spain") mapRef.current?.setView([40.5, -3.7], 6);
+      else if (currentLevel === "uk") mapRef.current?.setView([54.5, -3.0], 6);
       else if (currentLevel === "world") mapRef.current?.setView([20, 10], 3);
       else mapRef.current?.setView([36.2, 127.8], 8);
     }
