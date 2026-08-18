@@ -46,6 +46,7 @@ export type AccessoryType = "none" | "cap" | "crown" | "glasses" | "ribbon" | "h
 export interface CustomVehicleConfig {
   mode: "preset" | "custom_draw";
   baseType?: "subway" | "person" | "car" | "plane";
+  isCustomColor?: boolean;
   bodyColor?: string;
   accentColor?: string;
   eyeColor?: string;
@@ -57,9 +58,10 @@ export interface CustomVehicleConfig {
 export const DEFAULT_CUSTOM_VEHICLE: CustomVehicleConfig = {
   mode: "preset",
   baseType: "person",
-  bodyColor: "#10b981",
-  accentColor: "#047857",
-  eyeColor: "#1e293b",
+  isCustomColor: false,
+  bodyColor: undefined,
+  accentColor: undefined,
+  eyeColor: undefined,
   expression: "happy",
   accessory: "none",
   customDrawDataUrl: null,

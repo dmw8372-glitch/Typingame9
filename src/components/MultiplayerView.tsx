@@ -18,6 +18,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-indigo-500/20 focus:border-indigo-500",
       avatarBg: "bg-indigo-100 dark:bg-indigo-950/80 text-indigo-800 dark:text-indigo-200",
       activeTabBtn: "bg-indigo-700 text-white border-indigo-700 shadow-sm",
+      modeActiveBtn: "bg-indigo-700 text-white border-indigo-800 shadow-md ring-2 ring-indigo-400/40",
+      subCardBg: "bg-indigo-50/70 dark:bg-indigo-950/40",
+      subCardBorder: "border-indigo-200/80 dark:border-indigo-800/80",
+      subCardText: "text-indigo-900 dark:text-indigo-200",
       joinBtn: "bg-indigo-900 dark:bg-indigo-700 dark:hover:bg-indigo-600 hover:bg-indigo-800 text-white",
       progressBg: "bg-indigo-600",
     };
@@ -34,6 +38,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-red-500/20 focus:border-red-500",
       avatarBg: "bg-red-100 dark:bg-red-950/80 text-red-800 dark:text-red-200",
       activeTabBtn: "bg-red-600 text-white border-red-600 shadow-sm",
+      modeActiveBtn: "bg-red-600 text-white border-red-700 shadow-md ring-2 ring-red-400/40",
+      subCardBg: "bg-red-50/70 dark:bg-red-950/40",
+      subCardBorder: "border-red-200/80 dark:border-red-800/80",
+      subCardText: "text-red-900 dark:text-red-200",
       joinBtn: "bg-red-900 dark:bg-red-700 dark:hover:bg-red-600 hover:bg-red-800 text-white",
       progressBg: "bg-red-500",
     };
@@ -50,6 +58,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-emerald-500/20 focus:border-emerald-500",
       avatarBg: "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-200",
       activeTabBtn: "bg-emerald-600 text-white border-emerald-600 shadow-sm",
+      modeActiveBtn: "bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-400/40",
+      subCardBg: "bg-emerald-50/70 dark:bg-emerald-950/40",
+      subCardBorder: "border-emerald-200/80 dark:border-emerald-800/80",
+      subCardText: "text-emerald-900 dark:text-emerald-200",
       joinBtn: "bg-emerald-900 dark:bg-emerald-700 dark:hover:bg-emerald-600 hover:bg-emerald-800 text-white",
       progressBg: "bg-emerald-500",
     };
@@ -66,6 +78,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-blue-500/20 focus:border-blue-500",
       avatarBg: "bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-200",
       activeTabBtn: "bg-blue-600 text-white border-blue-600 shadow-sm",
+      modeActiveBtn: "bg-blue-600 text-white border-blue-700 shadow-md ring-2 ring-blue-400/40",
+      subCardBg: "bg-blue-50/70 dark:bg-blue-950/40",
+      subCardBorder: "border-blue-200/80 dark:border-blue-800/80",
+      subCardText: "text-blue-900 dark:text-blue-200",
       joinBtn: "bg-blue-900 dark:bg-blue-700 dark:hover:bg-blue-600 hover:bg-blue-800 text-white",
       progressBg: "bg-blue-500",
     };
@@ -76,12 +92,16 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       primaryBg: "bg-yellow-500",
       border: "border-yellow-200 dark:border-yellow-800/80",
       lightCardBg: "bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50 dark:from-yellow-950/40 dark:via-yellow-950/20 dark:to-amber-950/20 border-yellow-200/90 dark:border-yellow-800/80",
-      badgeBg: "bg-yellow-50 dark:bg-yellow-950/60 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800",
+      badgeBg: "bg-yellow-50 dark:bg-yellow-950/60 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800",
       badgeIcon: "text-yellow-600 dark:text-yellow-400",
-      accentText: "text-yellow-600 dark:text-yellow-400",
+      accentText: "text-yellow-700 dark:text-yellow-400",
       focusRing: "focus:ring-yellow-500/20 focus:border-yellow-500",
-      avatarBg: "bg-yellow-100 dark:bg-yellow-950/80 text-yellow-800 dark:text-yellow-200",
+      avatarBg: "bg-yellow-100 dark:bg-yellow-950/80 text-yellow-900 dark:text-yellow-200",
       activeTabBtn: "bg-yellow-500 text-slate-950 border-yellow-500 shadow-sm font-black",
+      modeActiveBtn: "bg-yellow-500 text-slate-950 font-black border-yellow-600 shadow-md ring-2 ring-yellow-400/40",
+      subCardBg: "bg-yellow-50/70 dark:bg-yellow-950/40",
+      subCardBorder: "border-yellow-200/80 dark:border-yellow-800/80",
+      subCardText: "text-yellow-950 dark:text-yellow-200",
       joinBtn: "bg-yellow-600 dark:bg-yellow-700 dark:hover:bg-yellow-600 hover:bg-yellow-500 text-white",
       progressBg: "bg-yellow-500",
     };
@@ -98,6 +118,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-red-500/20 focus:border-red-500",
       avatarBg: "bg-red-100 dark:bg-red-950/80 text-red-800 dark:text-red-200",
       activeTabBtn: "bg-red-600 text-white border-red-600 shadow-sm",
+      modeActiveBtn: "bg-red-600 text-white border-red-700 shadow-md ring-2 ring-red-400/40",
+      subCardBg: "bg-red-50/70 dark:bg-red-950/40",
+      subCardBorder: "border-red-200/80 dark:border-red-800/80",
+      subCardText: "text-red-900 dark:text-red-200",
       joinBtn: "bg-red-900 dark:bg-red-700 dark:hover:bg-red-600 hover:bg-red-800 text-white",
       progressBg: "bg-red-500",
     };
@@ -108,12 +132,16 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       primaryBg: "bg-amber-500",
       border: "border-amber-200 dark:border-amber-800/80",
       lightCardBg: "bg-gradient-to-br from-amber-50 via-amber-50/50 to-yellow-50 dark:from-amber-950/40 dark:via-amber-950/20 dark:to-yellow-950/20 border-amber-200/90 dark:border-amber-800/80",
-      badgeBg: "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
+      badgeBg: "bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800",
       badgeIcon: "text-amber-600 dark:text-amber-400",
-      accentText: "text-amber-600 dark:text-amber-400",
+      accentText: "text-amber-700 dark:text-amber-400",
       focusRing: "focus:ring-amber-500/20 focus:border-amber-500",
-      avatarBg: "bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-200",
+      avatarBg: "bg-amber-100 dark:bg-amber-950/80 text-amber-900 dark:text-amber-200",
       activeTabBtn: "bg-amber-500 text-slate-950 border-amber-500 shadow-sm font-black",
+      modeActiveBtn: "bg-amber-500 text-slate-950 font-black border-amber-600 shadow-md ring-2 ring-amber-400/40",
+      subCardBg: "bg-amber-50/70 dark:bg-amber-950/40",
+      subCardBorder: "border-amber-200/80 dark:border-amber-800/80",
+      subCardText: "text-amber-950 dark:text-amber-200",
       joinBtn: "bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-600 hover:bg-amber-500 text-white",
       progressBg: "bg-amber-500",
     };
@@ -130,6 +158,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-rose-500/20 focus:border-rose-500",
       avatarBg: "bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-200",
       activeTabBtn: "bg-rose-600 text-white border-rose-600 shadow-sm",
+      modeActiveBtn: "bg-rose-600 text-white border-rose-700 shadow-md ring-2 ring-rose-400/40",
+      subCardBg: "bg-rose-50/70 dark:bg-rose-950/40",
+      subCardBorder: "border-rose-200/80 dark:border-rose-800/80",
+      subCardText: "text-rose-900 dark:text-rose-200",
       joinBtn: "bg-rose-900 dark:bg-rose-700 dark:hover:bg-rose-600 hover:bg-rose-800 text-white",
       progressBg: "bg-rose-500",
     };
@@ -146,6 +178,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-blue-500/20 focus:border-blue-500",
       avatarBg: "bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-200",
       activeTabBtn: "bg-blue-600 text-white border-blue-600 shadow-sm",
+      modeActiveBtn: "bg-blue-600 text-white border-blue-700 shadow-md ring-2 ring-blue-400/40",
+      subCardBg: "bg-blue-50/70 dark:bg-blue-950/40",
+      subCardBorder: "border-blue-200/80 dark:border-blue-800/80",
+      subCardText: "text-blue-900 dark:text-blue-200",
       joinBtn: "bg-blue-900 dark:bg-blue-700 dark:hover:bg-blue-600 hover:bg-blue-800 text-white",
       progressBg: "bg-blue-500",
     };
@@ -162,6 +198,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
       focusRing: "focus:ring-slate-500/20 focus:border-slate-500",
       avatarBg: "bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200",
       activeTabBtn: "bg-slate-800 dark:bg-slate-700 text-white border-slate-800 dark:border-slate-700 shadow-sm",
+      modeActiveBtn: "bg-slate-700 dark:bg-slate-600 text-white border-slate-800 dark:border-slate-500 shadow-md ring-2 ring-slate-400/40",
+      subCardBg: "bg-slate-100 dark:bg-slate-800/60",
+      subCardBorder: "border-slate-300 dark:border-slate-700",
+      subCardText: "text-slate-800 dark:text-slate-200",
       joinBtn: "bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white",
       progressBg: "bg-slate-600",
     };
@@ -178,6 +218,10 @@ export const getMultiplayerTheme = (scopeOrLevel?: string) => {
     focusRing: "focus:ring-emerald-500/20 focus:border-emerald-500",
     avatarBg: "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-200",
     activeTabBtn: "bg-emerald-600 text-white border-emerald-600 shadow-sm",
+    modeActiveBtn: "bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-400/40",
+    subCardBg: "bg-emerald-50/70 dark:bg-emerald-950/40",
+    subCardBorder: "border-emerald-200/80 dark:border-emerald-800/80",
+    subCardText: "text-emerald-900 dark:text-emerald-200",
     joinBtn: "bg-slate-900 dark:bg-emerald-700 dark:hover:bg-emerald-600 hover:bg-slate-800 text-white",
     progressBg: "bg-emerald-500",
   };
@@ -352,6 +396,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
 
   // Room Creation Options
   const [createRoomName, setCreateRoomName] = useState("");
+  const [createGameType, setCreateGameType] = useState<"typing" | "quiz">("typing");
   const [isPublicRoom, setIsPublicRoom] = useState(true);
   const [roomPasswordInput, setRoomPasswordInput] = useState("");
 
@@ -373,12 +418,12 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
     }
   }, [nickname]);
 
-  // Default room name when user changes nickname
+  // Default room name when user changes nickname or gameType
   useEffect(() => {
     if (userNick.trim() && !createRoomName) {
-      setCreateRoomName(`${userNick.trim()}의 대결방`);
+      setCreateRoomName(`${userNick.trim()}의 ${createGameType === "quiz" ? "퀴즈 대결방" : "타이핑 대결방"}`);
     }
-  }, [userNick]);
+  }, [userNick, createGameType]);
 
   // Real-time Lobby Tracker Subscription
   useEffect(() => {
@@ -456,23 +501,25 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
 
     // Generate random 4-digit room code
     const code = Math.floor(Math.random() * 8999 + 1000).toString();
-    const finalRoomName = createRoomName.trim() || `${userNick.trim()}의 대결방`;
+    const finalRoomName = createRoomName.trim() || `${userNick.trim()}의 ${createGameType === "quiz" ? "퀴즈 대결방" : "타이핑 대결방"}`;
     const pwd = !isPublicRoom && roomPasswordInput.trim() ? roomPasswordInput.trim() : undefined;
 
-    const room = new MultiplayerRoom(code, userNick, true, finalRoomName, isPublicRoom, pwd);
+    const room = new MultiplayerRoom(code, userNick, true, finalRoomName, isPublicRoom, pwd, createGameType);
 
     room.init(
       (updatedRoom) => {
         setRoomState(updatedRoom);
       },
-      (stations) => {
+      (stations, incomingGameType) => {
         setRoomState((prev) => {
+          const effectiveGameType = incomingGameType || prev?.gameType || createGameType;
           const latestState: RoomState = prev
-            ? { ...prev, isStarted: true, stations }
+            ? { ...prev, isStarted: true, stations, gameType: effectiveGameType }
             : {
                 roomCode: code,
                 roomName: finalRoomName,
                 level: selectedLevel,
+                gameType: effectiveGameType,
                 targetCount: selectedTargetCount,
                 isStarted: true,
                 isPublic: isPublicRoom,
@@ -486,7 +533,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
       }
     );
 
-    room.updateRoomConfig(selectedLevel, selectedTargetCount, isPublicRoom, finalRoomName);
+    room.updateRoomConfig(selectedLevel, selectedTargetCount, isPublicRoom, finalRoomName, createGameType);
     setActiveRoom(room);
   };
 
@@ -537,14 +584,16 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
       (updatedRoom) => {
         setRoomState(updatedRoom);
       },
-      (stations) => {
+      (stations, incomingGameType) => {
         setRoomState((prev) => {
+          const effectiveGameType = incomingGameType || prev?.gameType || "typing";
           const latestState: RoomState = prev
-            ? { ...prev, isStarted: true, stations }
+            ? { ...prev, isStarted: true, stations, gameType: effectiveGameType }
             : {
                 roomCode: cleanedCode,
                 roomName: `${userNick}의 참여방`,
                 level: selectedLevel,
+                gameType: effectiveGameType,
                 targetCount: 20,
                 isStarted: true,
                 isPublic: true,
@@ -571,6 +620,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
   const handleStartRace = () => {
     if (!activeRoom || !roomState) return;
 
+    const currentGameType = roomState.gameType || "typing";
     // Pick connected targetCount stations for chosen level using neighbor course generator
     const sourceRegions = (allRegionsData as any)[roomState.level] || allRegionsData.sido;
     const chosen = generateCourseForPool(sourceRegions, roomState.targetCount);
@@ -578,10 +628,11 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
     const updatedRoomState: RoomState = {
       ...roomState,
       isStarted: true,
+      gameType: currentGameType,
       stations: chosen,
     };
 
-    activeRoom.startGame(chosen);
+    activeRoom.startGame(chosen, currentGameType);
     onStartMultiplayerGame(activeRoom, updatedRoomState);
   };
 
@@ -639,6 +690,10 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
           </button>
 
           <div className="flex items-center gap-2">
+            <span className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${theme.badgeBg}`}>
+              {roomState.gameType === "quiz" ? "퀴즈" : "타자 연습"}
+            </span>
+
             <span className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${roomState.isPublic ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800" : "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800"}`}>
               {roomState.isPublic ? <Globe className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
               {roomState.isPublic ? "공개방" : "비밀방"}
@@ -655,12 +710,25 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
         <div className="mt-4 p-4 bg-slate-100 dark:bg-slate-800/80 rounded-2xl flex items-center justify-between">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">대결 방 이름</span>
-            <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">{roomState.roomName || "타이핑 대전방"}</h2>
+            <h2 className="text-lg font-black text-slate-900 dark:text-slate-100">{roomState.roomName || (roomState.gameType === "quiz" ? "퀴즈 대결방" : "타자 연습 대결방")}</h2>
           </div>
           <span className="text-xs font-extrabold text-slate-500 dark:text-slate-400 font-mono">
             {playersList.length}명 참여 중
           </span>
         </div>
+
+        {/* Quiz Mode Distinct Features Banner */}
+        {roomState.gameType === "quiz" && (
+          <div className="mt-4 p-3.5 bg-purple-50 dark:bg-purple-950/50 border border-purple-200 dark:border-purple-800 rounded-2xl flex items-start gap-2.5 text-purple-900 dark:text-purple-200 text-xs">
+            <span className="text-base leading-none shrink-0">💡</span>
+            <div>
+              <p className="font-extrabold">멀티플레이 퀴즈 모드</p>
+              <p className="text-[11px] text-purple-700 dark:text-purple-300 mt-0.5 leading-relaxed">
+                퀴즈 모드에서는 각 참가자마다 <strong>서로 다른 무작위 문제 코스</strong>가 배정됩니다! 경기 중 지도에서 <strong>상대방의 주행 경로와 위치가 나랑 다른 색상</strong>으로 실시간 표시됩니다.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Room Code Banner - Clean White Container */}
         <div className="mt-4 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm text-slate-900 dark:text-slate-100">
@@ -683,16 +751,68 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
           </button>
         </div>
 
-        {/* Target Station Count Settings */}
+        {/* Target Station Count & Game Mode Settings */}
         <div className="mt-6 p-5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
+          {/* Host Mode Selector: 타자 연습 vs 퀴즈 */}
+          <div className="p-3.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <span>🎮</span> 대전 모드 선택
+              </span>
+              <span className={`text-[10px] ${theme.accentText} font-bold`}>
+                {isHost ? "방장 설정 가능" : "방장 설정 모드"}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                disabled={!isHost}
+                onClick={() => {
+                  if (!isHost) return;
+                  setRoomState((prev) => (prev ? { ...prev, gameType: "typing" } : null));
+                  activeRoom.updateRoomConfig(roomState.level, roomState.targetCount, roomState.isPublic, roomState.roomName, "typing");
+                }}
+                className={`py-2 px-3 text-xs font-black rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  (roomState.gameType || "typing") === "typing"
+                    ? `${theme.modeActiveBtn} shadow-md`
+                    : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                } ${!isHost ? "cursor-not-allowed opacity-90" : ""}`}
+              >
+                {(roomState.gameType || "typing") === "typing" && (
+                  <Check className={`w-3.5 h-3.5 ${roomState.level === "germany" || roomState.level === "china" ? "text-slate-950" : "text-white"} stroke-[3]`} />
+                )}
+                <span>타자 연습</span>
+              </button>
+
+              <button
+                type="button"
+                disabled={!isHost}
+                onClick={() => {
+                  if (!isHost) return;
+                  setRoomState((prev) => (prev ? { ...prev, gameType: "quiz" } : null));
+                  activeRoom.updateRoomConfig(roomState.level, roomState.targetCount, roomState.isPublic, roomState.roomName, "quiz");
+                }}
+                className={`py-2 px-3 text-xs font-black rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                  roomState.gameType === "quiz"
+                    ? `${theme.modeActiveBtn} shadow-md`
+                    : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                } ${!isHost ? "cursor-not-allowed opacity-90" : ""}`}
+              >
+                {roomState.gameType === "quiz" && (
+                  <Check className={`w-3.5 h-3.5 ${roomState.level === "germany" || roomState.level === "china" ? "text-slate-950" : "text-white"} stroke-[3]`} />
+                )}
+                <span>퀴즈</span>
+              </button>
+            </div>
+          </div>
           {/* If Korea mode room, allow host to toggle between 광역지자체 and 시·군·구 */}
           {(roomState.level === "sido" || roomState.level === "sigungu") && (
-            <div className="p-3.5 bg-blue-50/70 dark:bg-blue-950/40 rounded-xl border border-blue-200/80 dark:border-blue-800/80 space-y-2">
+            <div className={`p-3.5 ${theme.subCardBg} rounded-xl border ${theme.subCardBorder} space-y-2`}>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-blue-900 dark:text-blue-200 flex items-center gap-1.5">
+                <span className={`text-xs font-black ${theme.subCardText} flex items-center gap-1.5`}>
                   <span>🇰🇷</span> 대한민국 대결 행정구역 선택
                 </span>
-                <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold">
+                <span className={`text-[10px] ${theme.accentText} font-bold`}>
                   현재: {roomState.level === "sido" ? "광역지자체 (17개)" : "시·군·구 (229개)"}
                 </span>
               </div>
@@ -708,7 +828,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                   }}
                   className={`py-2 px-3 text-xs font-black rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     roomState.level === "sido"
-                      ? "bg-blue-600 text-white border-blue-700 shadow-md ring-2 ring-blue-400/40"
+                      ? `${theme.modeActiveBtn} shadow-md`
                       : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
                   } ${!isHost ? "cursor-not-allowed opacity-90" : ""}`}
                 >
@@ -727,7 +847,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                   }}
                   className={`py-2 px-3 text-xs font-black rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                     roomState.level === "sigungu"
-                      ? "bg-blue-600 text-white border-blue-700 shadow-md ring-2 ring-blue-400/40"
+                      ? `${theme.modeActiveBtn} shadow-md`
                       : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800"
                   } ${!isHost ? "cursor-not-allowed opacity-90" : ""}`}
                 >
@@ -746,7 +866,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                   정복 목표 역 수 설정
                 </span>
                 <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                  현재 설정: <strong className="text-amber-600 dark:text-amber-400 font-black">{roomState.targetCount}개 역</strong> 정복 레이스
+                  현재 설정: <strong className={`${theme.accentText} font-black`}>{roomState.targetCount}개 역</strong> 정복 레이스
                 </span>
               </div>
             </div>
@@ -775,11 +895,13 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                     }}
                     className={`py-3 px-3 text-xs font-black rounded-xl border-2 transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                       isSelected
-                        ? "bg-amber-500 text-white border-amber-600 shadow-md ring-2 ring-amber-400/50 scale-[1.02]"
+                        ? `${theme.modeActiveBtn} scale-[1.02]`
                         : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
                     } ${!isHost ? "cursor-not-allowed opacity-90" : ""}`}
                   >
-                    {isSelected && <Check className="w-4 h-4 text-white stroke-[3]" />}
+                    {isSelected && (
+                      <Check className={`w-4 h-4 ${roomState.level === "germany" || roomState.level === "china" ? "text-slate-950" : "text-white"} stroke-[3]`} />
+                    )}
                     <span>{cnt}개</span>
                   </button>
                 );
@@ -1063,9 +1185,12 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                   </div>
 
                   <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="px-2 py-0.5 bg-slate-200/70 dark:bg-slate-700 font-bold rounded text-[10px]">
                         {getCourseBadgeText(room.level)}
+                      </span>
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-extrabold ${room.gameType === "quiz" ? "bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300" : "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300"}`}>
+                        {room.gameType === "quiz" ? "퀴즈" : "타자 연습"}
                       </span>
                       <span className="font-bold text-slate-600 dark:text-slate-300">
                         {room.targetCount}개 역
@@ -1081,7 +1206,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
                         onClick={() => handleDirectJoinRoom(room)}
                         className={`py-1 px-3 ${room.hasPassword ? "bg-amber-600 hover:bg-amber-500" : theme.primaryBg} text-white font-bold text-xs rounded-lg shadow-sm transition-all flex items-center gap-1 cursor-pointer`}
                       >
-                        {room.hasPassword ? <Lock className="w-3 h-3" /> : <Play className="w-3 h-3 fill-white" />}
+                        {room.hasPassword ? <Lock className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-white" />}
                         <span>{room.hasPassword ? "입장" : "바로 참가"}</span>
                       </button>
                     </div>
@@ -1107,7 +1232,7 @@ export const MultiplayerView: React.FC<MultiplayerViewProps> = ({
               </div>
 
               <h3 className="text-sm font-black text-slate-900 dark:text-slate-100">새로운 대결 방 만들기</h3>
-
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">방 생성 후 대기실에서 타자 연습 / 퀴즈 모드를 선택할 수 있습니다.</p>
 
               {/* Room Name Input */}
               <div className="mt-3">

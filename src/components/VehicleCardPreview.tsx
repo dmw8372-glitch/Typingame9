@@ -33,9 +33,9 @@ export const VehicleCardPreview: React.FC<VehicleCardPreviewProps> = ({ type, re
     );
   }
 
-  const bodyColor = customConfig?.bodyColor || c.primary;
-  const accentColor = customConfig?.accentColor || c.dark;
-  const eyeColor = customConfig?.eyeColor || c.eye;
+  const bodyColor = (customConfig?.isCustomColor && customConfig?.bodyColor) ? customConfig.bodyColor : c.primary;
+  const accentColor = (customConfig?.isCustomColor && customConfig?.accentColor) ? customConfig.accentColor : c.dark;
+  const eyeColor = (customConfig?.isCustomColor && customConfig?.eyeColor) ? customConfig.eyeColor : c.eye;
   const expr = customConfig?.expression || "happy";
   const acc = customConfig?.accessory || "none";
 

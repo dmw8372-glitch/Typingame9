@@ -62,6 +62,7 @@ export const CharacterCustomizerModal: React.FC<CharacterCustomizerModalProps> =
 
   // Preset customization state
   const [baseType, setBaseType] = useState<VehicleType>(config.baseType || "person");
+  const [isCustomColor, setIsCustomColor] = useState<boolean>(Boolean(config.isCustomColor));
   const [bodyColor, setBodyColor] = useState<string>(config.bodyColor || "#10b981");
   const [accentColor, setAccentColor] = useState<string>(config.accentColor || "#047857");
   const [expression, setExpression] = useState<ExpressionType>(config.expression || "happy");
@@ -81,6 +82,7 @@ export const CharacterCustomizerModal: React.FC<CharacterCustomizerModalProps> =
     if (isOpen) {
       setActiveTab(config.mode === "custom_draw" ? "draw" : "preset");
       setBaseType(config.baseType || "person");
+      setIsCustomColor(Boolean(config.isCustomColor));
       setBodyColor(config.bodyColor || "#10b981");
       setAccentColor(config.accentColor || "#047857");
       setExpression(config.expression || "happy");
@@ -275,8 +277,9 @@ export const CharacterCustomizerModal: React.FC<CharacterCustomizerModalProps> =
     const updated: CustomVehicleConfig = {
       mode: "preset",
       baseType,
-      bodyColor,
-      accentColor,
+      isCustomColor,
+      bodyColor: isCustomColor ? bodyColor : undefined,
+      accentColor: isCustomColor ? accentColor : undefined,
       expression,
       accessory,
       customDrawDataUrl: drawnDataUrl,
@@ -290,8 +293,9 @@ export const CharacterCustomizerModal: React.FC<CharacterCustomizerModalProps> =
     const updated: CustomVehicleConfig = {
       mode: "custom_draw",
       baseType,
-      bodyColor,
-      accentColor,
+      isCustomColor,
+      bodyColor: isCustomColor ? bodyColor : undefined,
+      accentColor: isCustomColor ? accentColor : undefined,
       expression,
       accessory,
       customDrawDataUrl: drawnDataUrl,
@@ -305,8 +309,9 @@ export const CharacterCustomizerModal: React.FC<CharacterCustomizerModalProps> =
   const currentPreviewConfig: CustomVehicleConfig = {
     mode: activeTab === "draw" ? "custom_draw" : "preset",
     baseType,
-    bodyColor,
-    accentColor,
+    isCustomColor,
+    bodyColor: isCustomColor ? bodyColor : undefined,
+    accentColor: isCustomColor ? accentColor : undefined,
     expression,
     accessory,
     customDrawDataUrl: drawnDataUrl,

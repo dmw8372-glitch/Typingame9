@@ -3,6 +3,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { Region } from "../types";
 
 export type MultiplayerLevel = "sido" | "sigungu" | "japan" | "usa" | "china" | "vietnam" | "germany" | "france" | "italy" | "spain" | "uk" | "world";
+export type MultiplayerGameType = "typing" | "quiz";
 
 export interface PlayerState {
   id: string;
@@ -15,12 +16,16 @@ export interface PlayerState {
   accuracy: number;
   finished: boolean;
   finishTime?: number;
+  stations?: Region[]; // Individual course path (for quiz mode or custom courses)
+  score?: number; // Quiz correct count
+  colorIndex?: number; // Distinct index (0..5) for map path rendering
 }
 
 export interface RoomState {
   roomCode: string;
   roomName: string;
   level: MultiplayerLevel;
+  gameType?: MultiplayerGameType;
   targetCount: number;
   isStarted: boolean;
   isPublic: boolean;
@@ -34,6 +39,7 @@ export interface PublicRoomInfo {
   roomName: string;
   hostNickname: string;
   level: MultiplayerLevel;
+  gameType?: MultiplayerGameType;
   targetCount: number;
   playerCount: number;
   isStarted: boolean;
@@ -154,11 +160,19 @@ export class MultiplayerRoom {
   private isHost: boolean = false;
 
   private onRoomUpdateCallback?: (room: RoomState) => void;
-  private onGameStartCallback?: (stations: Region[]) => void;
+  private onGameStartCallback?: (stations: Region[], gameType?: MultiplayerGameType) => void;
 
   private currentState: RoomState;
 
-  constructor(roomCode: string, nickname: string, isHost: boolean, roomName?: string, isPublic: boolean = true, password?: string) {
+  constructor(
+    roomCode: string,
+    nickname: string,
+    isHost: boolean,
+    roomName?: string,
+    isPublic: boolean = true,
+    password?: string,
+    gameType: MultiplayerGameType = "typing"
+  ) {
     this.roomCode = (roomCode || "").toUpperCase().trim().replace(/^ROOM-?/i, "");
     this.myNickname = (nickname || "").trim() || "무명 운행사";
     this.myPlayerId = "player_" + Math.random().toString(36).substring(2, 9);
@@ -166,9 +180,10 @@ export class MultiplayerRoom {
 
     this.currentState = {
       roomCode: this.roomCode,
-      roomName: roomName || `${this.myNickname}의 타이핑 대전방`,
+      roomName: roomName || `${this.myNickname}의 ${gameType === "quiz" ? "퀴즈 대전방" : "타이핑 대전방"}`,
       level: "sido",
-      targetCount: 20,
+      gameType: gameType,
+      targetCount: gameType === "quiz" ? 10 : 20,
       isStarted: false,
       isPublic: isPublic,
       password: password,
@@ -180,10 +195,11 @@ export class MultiplayerRoom {
           isHost,
           isReady: isHost,
           currentIndex: 0,
-          totalStations: 20,
+          totalStations: gameType === "quiz" ? 10 : 20,
           cpm: 0,
           accuracy: 100,
           finished: false,
+          colorIndex: 0,
         },
       },
     };
@@ -202,6 +218,7 @@ export class MultiplayerRoom {
           const { playerId, nickname } = payload;
           this.currentState.players = this.currentState.players || {};
           const existing = this.currentState.players[playerId];
+          const assignedColorIndex = Object.keys(this.currentState.players).length % 6;
           
           this.currentState.players[playerId] = {
             id: playerId,
@@ -214,6 +231,9 @@ export class MultiplayerRoom {
             accuracy: existing ? existing.accuracy : 100,
             finished: existing ? existing.finished : false,
             finishTime: existing ? existing.finishTime : undefined,
+            stations: existing ? existing.stations : undefined,
+            score: existing ? existing.score : 0,
+            colorIndex: existing?.colorIndex !== undefined ? existing.colorIndex : assignedColorIndex,
           };
 
           if (this.onRoomUpdateCallback) {
@@ -261,9 +281,10 @@ export class MultiplayerRoom {
           this.onRoomUpdateCallback({ ...this.currentState });
         }
       } else if (event === "player_progress") {
-        const { playerId, currentIndex, cpm, accuracy, finished, finishTime } = payload;
+        const { playerId, currentIndex, cpm, accuracy, finished, finishTime, stations, score } = payload;
         if (playerId && this.currentState.players) {
           if (!this.currentState.players[playerId]) {
+            const assignedColorIndex = Object.keys(this.currentState.players).length % 6;
             this.currentState.players[playerId] = {
               id: playerId,
               nickname: payload.nickname || "무명 운행사",
@@ -275,6 +296,9 @@ export class MultiplayerRoom {
               accuracy: accuracy ?? 100,
               finished: !!finished,
               finishTime,
+              stations: stations,
+              score: score ?? 0,
+              colorIndex: assignedColorIndex,
             };
           } else {
             this.currentState.players[playerId].currentIndex = currentIndex ?? 0;
@@ -284,6 +308,12 @@ export class MultiplayerRoom {
             if (finishTime) {
               this.currentState.players[playerId].finishTime = finishTime;
             }
+            if (stations && Array.isArray(stations) && stations.length > 0) {
+              this.currentState.players[playerId].stations = stations;
+            }
+            if (score !== undefined) {
+              this.currentState.players[playerId].score = score;
+            }
           }
 
           if (this.onRoomUpdateCallback) {
@@ -291,15 +321,17 @@ export class MultiplayerRoom {
           }
         }
       } else if (event === "start_game") {
+        const gameType = payload.gameType || "typing";
+        this.currentState.isStarted = true;
+        this.currentState.gameType = gameType;
         if (payload.stations && Array.isArray(payload.stations)) {
-          this.currentState.isStarted = true;
           this.currentState.stations = payload.stations;
-          if (this.onGameStartCallback) {
-            this.onGameStartCallback(payload.stations);
-          }
-          if (this.onRoomUpdateCallback) {
-            this.onRoomUpdateCallback({ ...this.currentState });
-          }
+        }
+        if (this.onGameStartCallback) {
+          this.onGameStartCallback(payload.stations || [], gameType);
+        }
+        if (this.onRoomUpdateCallback) {
+          this.onRoomUpdateCallback({ ...this.currentState });
         }
       }
     } catch (err) {
@@ -325,6 +357,7 @@ export class MultiplayerRoom {
       roomName: this.currentState.roomName,
       hostNickname: this.myNickname,
       level: this.currentState.level,
+      gameType: this.currentState.gameType || "typing",
       targetCount: this.currentState.targetCount,
       playerCount: Object.keys(this.currentState.players || {}).length,
       isStarted: this.currentState.isStarted,
@@ -365,7 +398,7 @@ export class MultiplayerRoom {
 
   public init(
     onRoomUpdate: (room: RoomState) => void,
-    onGameStart: (stations: Region[]) => void
+    onGameStart: (stations: Region[], gameType?: MultiplayerGameType) => void
   ) {
     this.onRoomUpdateCallback = onRoomUpdate;
     this.onGameStartCallback = onGameStart;
@@ -497,12 +530,19 @@ export class MultiplayerRoom {
     }
   }
 
-  public updateRoomConfig(level: MultiplayerLevel, targetCount: number, isPublic?: boolean, roomName?: string) {
+  public updateRoomConfig(
+    level: MultiplayerLevel,
+    targetCount: number,
+    isPublic?: boolean,
+    roomName?: string,
+    gameType?: MultiplayerGameType
+  ) {
     if (!this.isHost) return;
     this.currentState.level = level;
     this.currentState.targetCount = targetCount;
     if (isPublic !== undefined) this.currentState.isPublic = isPublic;
     if (roomName !== undefined) this.currentState.roomName = roomName;
+    if (gameType !== undefined) this.currentState.gameType = gameType;
 
     this.currentState.players = this.currentState.players || {};
     Object.keys(this.currentState.players).forEach((p) => {
@@ -514,21 +554,22 @@ export class MultiplayerRoom {
     this.announceToLobby();
   }
 
-  public startGame(stations: Region[]) {
+  public startGame(stations: Region[], gameType: MultiplayerGameType = "typing") {
     if (!this.isHost) return;
     this.currentState.isStarted = true;
+    this.currentState.gameType = gameType;
     this.currentState.stations = stations;
 
     try {
       this.channel?.send({
         type: "broadcast",
         event: "start_game",
-        payload: { stations },
+        payload: { stations, gameType },
       });
     } catch (e) {
       console.warn("Send start_game error:", e);
     }
-    this.postToBroadcastChannel("start_game", { stations });
+    this.postToBroadcastChannel("start_game", { stations, gameType });
 
     this.broadcastState();
     this.announceToLobby();
@@ -545,6 +586,8 @@ export class MultiplayerRoom {
           this.currentState.players[id].finishTime = undefined;
           this.currentState.players[id].cpm = 0;
           this.currentState.players[id].accuracy = 100;
+          this.currentState.players[id].stations = undefined;
+          this.currentState.players[id].score = 0;
         }
       });
     }
@@ -555,7 +598,15 @@ export class MultiplayerRoom {
     }
   }
 
-  public updateProgress(currentIndex: number, cpm: number, accuracy: number, finished: boolean, finishTime?: number) {
+  public updateProgress(
+    currentIndex: number,
+    cpm: number,
+    accuracy: number,
+    finished: boolean,
+    finishTime?: number,
+    stations?: Region[],
+    score?: number
+  ) {
     if (this.currentState.players[this.myPlayerId]) {
       this.currentState.players[this.myPlayerId].currentIndex = currentIndex;
       this.currentState.players[this.myPlayerId].cpm = cpm;
@@ -564,15 +615,24 @@ export class MultiplayerRoom {
       if (finishTime) {
         this.currentState.players[this.myPlayerId].finishTime = finishTime;
       }
+      if (stations && Array.isArray(stations) && stations.length > 0) {
+        this.currentState.players[this.myPlayerId].stations = stations;
+      }
+      if (score !== undefined) {
+        this.currentState.players[this.myPlayerId].score = score;
+      }
     }
 
     const payload = {
       playerId: this.myPlayerId,
+      nickname: this.myNickname,
       currentIndex,
       cpm,
       accuracy,
       finished,
       finishTime,
+      stations,
+      score,
     };
 
     try {

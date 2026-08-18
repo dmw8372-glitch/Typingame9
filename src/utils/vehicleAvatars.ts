@@ -51,24 +51,28 @@ export interface VehicleColorScheme {
 }
 
 export function getVehicleColorScheme(regionLevel?: string, customConfig?: CustomVehicleConfig): VehicleColorScheme {
-  if (customConfig?.bodyColor) {
+  // If the user explicitly set an override custom color in customizer
+  if (customConfig?.mode === "preset" && customConfig.isCustomColor && customConfig.bodyColor) {
     const primary = customConfig.bodyColor;
     const dark = customConfig.accentColor || "#047857";
     return {
       primary,
       dark,
-      light: "#d1fae5",
-      glass: "#34d399",
-      eye: customConfig.eyeColor || "#a7f3d0",
-      tailwindBorder: "border-emerald-500",
-      tailwindBg: "bg-emerald-50 dark:bg-emerald-950/40",
-      tailwindText: "text-emerald-600 dark:text-emerald-400",
-      tailwindPill: "bg-emerald-600 text-white",
-      tailwindRipple: "bg-emerald-500/30",
+      light: "#f1f5f9",
+      glass: primary,
+      eye: customConfig.eyeColor || "#1e293b",
+      tailwindBorder: "border-slate-400",
+      tailwindBg: "bg-slate-50 dark:bg-slate-900",
+      tailwindText: "text-slate-700 dark:text-slate-300",
+      tailwindPill: "bg-slate-800 text-white",
+      tailwindRipple: "bg-slate-500/30",
     };
   }
 
-  if (regionLevel === "japan") {
+  const lvl = (regionLevel || "").toLowerCase();
+
+  // Japan (Rose Red)
+  if (lvl.includes("japan")) {
     return {
       primary: "#f43f5e",
       dark: "#881337",
@@ -82,7 +86,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-rose-500/30",
     };
   }
-  if (regionLevel === "usa") {
+
+  // USA (Classic Blue)
+  if (lvl.includes("usa") || lvl.includes("united states") || lvl.includes("america")) {
     return {
       primary: "#2563eb",
       dark: "#1e3a8a",
@@ -96,7 +102,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-blue-500/30",
     };
   }
-  if (regionLevel === "china") {
+
+  // China (Amber Gold)
+  if (lvl.includes("china")) {
     return {
       primary: "#f59e0b",
       dark: "#78350f",
@@ -110,7 +118,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-amber-500/30",
     };
   }
-  if (regionLevel === "vietnam") {
+
+  // Vietnam (Red & Gold)
+  if (lvl.includes("vietnam")) {
     return {
       primary: "#dc2626",
       dark: "#991b1b",
@@ -124,7 +134,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-red-500/30",
     };
   }
-  if (regionLevel === "germany") {
+
+  // Germany (Yellow Gold)
+  if (lvl.includes("germany")) {
     return {
       primary: "#eab308",
       dark: "#854d0e",
@@ -138,7 +150,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-yellow-500/30",
     };
   }
-  if (regionLevel === "france") {
+
+  // France (Royal Blue)
+  if (lvl.includes("france")) {
     return {
       primary: "#2563eb",
       dark: "#1e3a8a",
@@ -152,7 +166,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-blue-500/30",
     };
   }
-  if (regionLevel === "italy") {
+
+  // Italy (Italian Green)
+  if (lvl.includes("italy")) {
     return {
       primary: "#059669",
       dark: "#064e3b",
@@ -166,7 +182,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-emerald-500/30",
     };
   }
-  if (regionLevel === "spain") {
+
+  // Spain (Spanish Red)
+  if (lvl.includes("spain")) {
     return {
       primary: "#dc2626",
       dark: "#991b1b",
@@ -180,7 +198,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-red-500/30",
     };
   }
-  if (regionLevel === "uk") {
+
+  // UK (British Navy / Indigo)
+  if (lvl.includes("uk") || lvl.includes("britain") || lvl.includes("united kingdom")) {
     return {
       primary: "#1e3a8a",
       dark: "#0f172a",
@@ -194,7 +214,9 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-indigo-500/30",
     };
   }
-  if (regionLevel === "world") {
+
+  // World (Slate Gray)
+  if (lvl.includes("world") || lvl.includes("global") || lvl.includes("earth")) {
     return {
       primary: "#64748b",
       dark: "#1e293b",
@@ -208,7 +230,24 @@ export function getVehicleColorScheme(regionLevel?: string, customConfig?: Custo
       tailwindRipple: "bg-slate-500/30",
     };
   }
-  // Default: Korea (Emerald)
+
+  // Random (Vibrant Purple)
+  if (lvl.includes("random")) {
+    return {
+      primary: "#8b5cf6",
+      dark: "#5b21b6",
+      light: "#ede9fe",
+      glass: "#a78bfa",
+      eye: "#ddd6fe",
+      tailwindBorder: "border-purple-500",
+      tailwindBg: "bg-purple-50 dark:bg-purple-950/40",
+      tailwindText: "text-purple-600 dark:text-purple-400",
+      tailwindPill: "bg-purple-600 text-white",
+      tailwindRipple: "bg-purple-500/30",
+    };
+  }
+
+  // Default: Korea (sido / sigungu / korea) -> Emerald Green
   return {
     primary: "#10b981",
     dark: "#047857",
@@ -391,7 +430,7 @@ export function getMapVehicleMarkerHtml(
         <div class="absolute w-12 h-12 ${c.tailwindRipple} rounded-full animate-ping pointer-events-none" style="animation-duration: 2s; top: 12px;"></div>
         ${avatarInnerHtml}
         <div class="mt-2.5 bg-slate-900 border border-slate-800 shadow-xl px-3.5 py-1.5 rounded-full text-[13px] font-black text-white tracking-tight whitespace-nowrap z-50 flex items-center gap-1.5">
-          ${flagUrl ? `<img src="${flagUrl}" class="w-4 h-3 object-cover rounded-xs border border-white/20 inline-block shrink-0" alt="" />` : `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>`}
+          ${flagUrl ? `<img src="${flagUrl}" class="w-4 h-3 object-cover rounded-xs border border-white/20 inline-block shrink-0" alt="" />` : `<span class="w-2 h-2 rounded-full ${c.tailwindPill.includes("rose") ? "bg-rose-400" : c.tailwindPill.includes("blue") ? "bg-blue-400" : c.tailwindPill.includes("amber") ? "bg-amber-400" : c.tailwindPill.includes("yellow") ? "bg-yellow-400" : c.tailwindPill.includes("red") ? "bg-red-400" : c.tailwindPill.includes("indigo") ? "bg-indigo-400" : c.tailwindPill.includes("slate") ? "bg-slate-400" : c.tailwindPill.includes("purple") ? "bg-purple-400" : "bg-emerald-400"} animate-pulse"></span>`}
           <span>${activeRegionName}</span>
         </div>
       </div>
@@ -400,9 +439,9 @@ export function getMapVehicleMarkerHtml(
   }
 
   // Preset custom colors / expressions / accessories
-  const bodyColor = customConfig?.bodyColor || c.primary;
-  const accentColor = customConfig?.accentColor || c.dark;
-  const eyeColor = customConfig?.eyeColor || c.eye;
+  const bodyColor = (customConfig?.isCustomColor && customConfig?.bodyColor) ? customConfig.bodyColor : c.primary;
+  const accentColor = (customConfig?.isCustomColor && customConfig?.accentColor) ? customConfig.accentColor : c.dark;
+  const eyeColor = (customConfig?.isCustomColor && customConfig?.eyeColor) ? customConfig.eyeColor : c.eye;
   const exprHtml = getExpressionHtml(customConfig?.expression || "happy", eyeColor);
   const accHtml = getAccessoryHtml(customConfig?.accessory || "none");
 

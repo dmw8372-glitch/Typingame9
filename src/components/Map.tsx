@@ -1481,37 +1481,97 @@ const MapComponent: React.FC<MapProps> = ({
       }
     }
 
-    // -- D. Draw Multiplayer Opponents on the Map --
-    if (multiplayerPlayers && coursePath && coursePath.length > 0) {
-      Object.values(multiplayerPlayers).forEach((player: PlayerState) => {
-        if (player.id !== myPlayerId) {
-          const stationIdx = Math.min(player.currentIndex, coursePath.length - 1);
-          const pStation = coursePath[stationIdx];
-          if (pStation && typeof pStation.lat === "number" && typeof pStation.lng === "number" && !isNaN(pStation.lat) && !isNaN(pStation.lng)) {
+    // -- D. Draw Multiplayer Opponents and their Courses on the Map --
+    if (multiplayerPlayers && Object.keys(multiplayerPlayers).length > 0) {
+      const OPPONENT_PALETTES = [
+        { stroke: "#f59e0b", fill: "#fbbf24", bg: "#f59e0b", pulse: "rgba(245, 158, 11, 0.4)", name: "주황" }, // 0: Amber
+        { stroke: "#a855f7", fill: "#c084fc", bg: "#a855f7", pulse: "rgba(168, 85, 247, 0.4)", name: "보라" }, // 1: Purple
+        { stroke: "#ec4899", fill: "#f472b6", bg: "#ec4899", pulse: "rgba(236, 72, 153, 0.4)", name: "분홍" }, // 2: Pink
+        { stroke: "#06b6d4", fill: "#22d3ee", bg: "#06b6d4", pulse: "rgba(6, 182, 212, 0.4)", name: "하늘" }, // 3: Cyan
+        { stroke: "#ef4444", fill: "#f87171", bg: "#ef4444", pulse: "rgba(239, 68, 68, 0.4)", name: "빨강" }, // 4: Rose
+        { stroke: "#3b82f6", fill: "#60a5fa", bg: "#3b82f6", pulse: "rgba(59, 130, 246, 0.4)", name: "파랑" }, // 5: Blue
+      ];
+
+      const opponentEntries = (Object.values(multiplayerPlayers) as PlayerState[]).filter((p) => p && p.id !== myPlayerId);
+
+      opponentEntries.forEach((player: PlayerState, idx: number) => {
+        const palette = OPPONENT_PALETTES[(player.colorIndex !== undefined ? player.colorIndex : idx) % OPPONENT_PALETTES.length];
+        const pStations = (player.stations && player.stations.length > 0) ? player.stations : coursePath;
+
+        if (pStations && pStations.length > 0) {
+          const validStations = pStations.filter((s) => s && typeof s.lat === "number" && typeof s.lng === "number" && !isNaN(s.lat) && !isNaN(s.lng));
+
+          // 1. Draw opponent's full planned course route (Dashed line in opponent's distinct color)
+          if (validStations.length > 1) {
+            const allCoords: L.LatLngExpression[] = validStations.map((s) => [s.lat, s.lng]);
+            L.polyline(allCoords, {
+              color: palette.stroke,
+              weight: 2.5,
+              dashArray: "6, 6",
+              opacity: 0.65,
+              lineCap: "round",
+              lineJoin: "round",
+            }).addTo(polylinesGroup);
+
+            // 2. Draw opponent's traveled/visited route (Solid line in opponent's distinct color)
+            const visitedCount = Math.min((player.currentIndex || 0) + (player.finished ? 1 : 0), validStations.length);
+            if (visitedCount > 1) {
+              const visitedCoords: L.LatLngExpression[] = validStations.slice(0, visitedCount).map((s) => [s.lat, s.lng]);
+              L.polyline(visitedCoords, {
+                color: palette.stroke,
+                weight: 4,
+                opacity: 0.95,
+                lineCap: "round",
+                lineJoin: "round",
+              }).addTo(polylinesGroup);
+            }
+          }
+
+          // 3. Draw mini route station markers for opponent's course
+          validStations.forEach((s, sIdx) => {
+            const isStationVisited = sIdx < (player.currentIndex || 0) || (player.finished && sIdx <= player.currentIndex);
+            const oppStationIcon = L.divIcon({
+              className: "custom-opp-station-dot",
+              html: `
+                <div class="w-3 h-3 rounded-full border-2 border-white shadow-sm flex items-center justify-center select-none" style="background-color: ${isStationVisited ? palette.stroke : '#475569'}; transform: translate(-50%, -50%); opacity: ${isStationVisited ? '0.9' : '0.4'};">
+                  <div class="w-1 h-1 rounded-full bg-white"></div>
+                </div>
+              `,
+              iconSize: [12, 12],
+              iconAnchor: [6, 6],
+            });
+            L.marker([s.lat, s.lng], { icon: oppStationIcon, zIndexOffset: 200 }).addTo(markersGroup);
+          });
+
+          // 4. Draw opponent's current location badge & avatar
+          const stationIdx = Math.min(player.currentIndex || 0, validStations.length - 1);
+          const pStation = validStations[stationIdx];
+          if (pStation) {
             const isFinished = player.finished;
+            const scoreText = player.score !== undefined ? ` • ${player.score}점` : "";
             const opponentIcon = L.divIcon({
               className: "custom-opponent-marker-wrapper",
               html: `
                 <div class="relative flex flex-col items-center justify-center select-none" style="transform: translate(-50%, -85%);">
-                  <!-- Opponent Pulse Wave -->
-                  <div class="absolute w-12 h-12 bg-cyan-500/30 rounded-full animate-ping pointer-events-none" style="animation-duration: 1.8s; top: 10px;"></div>
+                  <!-- Opponent Pulse Wave in Distinct Color -->
+                  <div class="absolute w-12 h-12 rounded-full animate-ping pointer-events-none" style="animation-duration: 1.8s; top: 10px; background-color: ${palette.pulse};"></div>
                   
                   <!-- Opponent Avatar Badge -->
-                  <div class="relative shadow-xl flex items-center justify-center bg-cyan-600 text-white font-black rounded-2xl border-2 border-white px-2.5 py-1 text-xs gap-1">
+                  <div class="relative shadow-xl flex items-center justify-center text-white font-black rounded-2xl border-2 border-white px-2.5 py-1 text-xs gap-1" style="background-color: ${palette.bg};">
                     <span>👥 ${player.nickname}</span>
                   </div>
                   
-                  <!-- Progress Badge -->
+                  <!-- Progress & Score Badge -->
                   <div class="mt-1 bg-slate-900 text-amber-300 border border-slate-700 px-2 py-0.5 rounded-full text-[10px] font-extrabold shadow-lg whitespace-nowrap">
-                    ${isFinished ? "🏆 완주 성공!" : `${stationIdx + 1} / ${player.totalStations || coursePath.length}`}
+                    ${isFinished ? "🏆 완주 성공!" : `${stationIdx + 1}/${player.totalStations || validStations.length}${scoreText}`}
                   </div>
                 </div>
               `,
-              iconSize: [80, 45],
+              iconSize: [90, 48],
               iconAnchor: [0, 0],
             });
 
-            L.marker([pStation.lat, pStation.lng], { icon: opponentIcon, zIndexOffset: 800 }).addTo(markersGroup);
+            L.marker([pStation.lat, pStation.lng], { icon: opponentIcon, zIndexOffset: 850 }).addTo(markersGroup);
           }
         }
       });

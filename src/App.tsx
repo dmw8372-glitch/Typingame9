@@ -1892,7 +1892,7 @@ export default function App() {
                                   isLocked
                                     ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-50 cursor-not-allowed"
                                     : settings.regionGroup === grp
-                                    ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-900 dark:border-slate-100 cursor-pointer"
+                                    ? "bg-emerald-600 text-white border-emerald-600 font-extrabold shadow-sm cursor-pointer"
                                     : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
                                 }`}
                               >
@@ -2539,20 +2539,56 @@ export default function App() {
                     world: WORLD_LIST,
                   }}
                   onStartMultiplayerGame={(room, initialRoomState) => {
-                    const stations = initialRoomState.stations || [];
-                    if (!stations || stations.length === 0) return;
+                    const incomingStations = initialRoomState.stations || [];
+                    if (!incomingStations || incomingStations.length === 0) return;
 
                     if (initialRoomState.level) {
                       setSettings((prev) => ({ ...prev, level: initialRoomState.level }));
                     }
 
+                    // For multiplayer Quiz mode, generate an asymmetric (unique) random course for this player
+                    let activeCourseStations = incomingStations;
+                    if (initialRoomState.gameType === "quiz") {
+                      const levelPool =
+                        initialRoomState.level === "sido"
+                          ? SIDO_LIST
+                          : initialRoomState.level === "sigungu"
+                          ? SIGUNGU_LIST
+                          : initialRoomState.level === "japan"
+                          ? JAPAN_LIST
+                          : initialRoomState.level === "usa"
+                          ? USA_LIST
+                          : initialRoomState.level === "china"
+                          ? CHINA_LIST
+                          : initialRoomState.level === "vietnam"
+                          ? VIETNAM_LIST
+                          : initialRoomState.level === "germany"
+                          ? GERMANY_LIST
+                          : initialRoomState.level === "france"
+                          ? FRANCE_LIST
+                          : initialRoomState.level === "italy"
+                          ? ITALY_LIST
+                          : initialRoomState.level === "spain"
+                          ? SPAIN_LIST
+                          : initialRoomState.level === "uk"
+                          ? UK_LIST
+                          : WORLD_LIST;
+
+                      const targetCount = initialRoomState.targetCount || incomingStations.length || 10;
+                      const shuffled = [...levelPool].sort(() => Math.random() - 0.5);
+                      activeCourseStations = shuffled.slice(0, Math.min(targetCount, levelPool.length));
+
+                      // Broadcast this player's unique course
+                      room.updateProgress(0, 0, 100, false, undefined, activeCourseStations, 0);
+                    }
+
                     setMultiplayerRoom(room);
                     setMultiplayerRoomState(initialRoomState);
                     setActiveMode("multiplayer");
-                    setCoursePath(stations);
+                    setCoursePath(activeCourseStations);
                     setCurrentIndex(0);
-                    setVisitedRegions([stations[0]]);
-                    setCourseHistory([stations[0].id]);
+                    setVisitedRegions([activeCourseStations[0]]);
+                    setCourseHistory([activeCourseStations[0].id]);
 
                     setGameTime(0);
                     gameTimeRef.current = 0;
@@ -3276,8 +3312,13 @@ export default function App() {
                 <div className="flex items-center justify-between text-xs font-bold text-slate-600 dark:text-slate-300 px-1">
                   <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-extrabold">
                     <Users className="w-4 h-4 animate-pulse text-emerald-600 dark:text-emerald-400" />
-                    실시간 멀티 레이스 대결
+                    {multiplayerRoomState.gameType === "quiz" ? "퀴즈" : "타자 연습"}
                   </span>
+                  {multiplayerRoomState.gameType === "quiz" && (
+                    <span className="text-[11px] text-purple-600 dark:text-purple-400 font-bold hidden sm:inline">
+                      💡 상대방과 다른 코스 주행 중 · 맵에 상대 코스가 색상별로 표시됩니다
+                    </span>
+                  )}
                   <span className="font-mono text-slate-500 dark:text-slate-400 text-xs">
                     초대 코드: <strong className="text-amber-600 dark:text-amber-400 font-black text-sm">{multiplayerRoomState.roomCode}</strong>
                   </span>
@@ -3285,56 +3326,74 @@ export default function App() {
 
                 {/* Horizontal grid list of players in current room - Stable sorting without jitter */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 max-h-32 overflow-y-auto no-scrollbar">
-                  {(Object.values(multiplayerRoomState.players || {}) as PlayerState[])
-                    .filter(Boolean)
-                    .sort((a: PlayerState, b: PlayerState) => {
-                      if (a.finished !== b.finished) {
-                        return a.finished ? -1 : 1;
-                      }
-                      const diff = (b.currentIndex || 0) - (a.currentIndex || 0);
-                      if (diff !== 0) return diff;
-                      return (a.id || "").localeCompare(b.id || "");
-                    })
-                    .map((p: PlayerState, idx: number) => {
-                      const isMe = p.id === multiplayerRoom?.getMyPlayerId();
-                      const total = p.totalStations || coursePath.length || 1;
-                      const progressPct = Math.min(100, Math.max(0, Math.round((((p.currentIndex || 0) + (p.finished ? 1 : 0)) / total) * 100)));
+                  {(() => {
+                    const OPPONENT_COLOR_CLASSES = [
+                      { dot: "bg-amber-500", bar: "bg-amber-500", border: "border-amber-400" },
+                      { dot: "bg-purple-500", bar: "bg-purple-500", border: "border-purple-400" },
+                      { dot: "bg-pink-500", bar: "bg-pink-500", border: "border-pink-400" },
+                      { dot: "bg-cyan-500", bar: "bg-cyan-500", border: "border-cyan-400" },
+                      { dot: "bg-red-500", bar: "bg-red-500", border: "border-red-400" },
+                      { dot: "bg-blue-500", bar: "bg-blue-500", border: "border-blue-400" },
+                    ];
 
-                      return (
-                        <div
-                          key={p.id}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors ${
-                            isMe
-                              ? "bg-emerald-50 dark:bg-emerald-950/80 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100 shadow-xs"
-                              : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
-                          }`}
-                        >
-                          <span className="w-6 text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-black shrink-0">
-                            {idx + 1}위
-                          </span>
-                          <span className="w-20 sm:w-24 truncate text-left text-xs font-black shrink-0 whitespace-nowrap">
-                            {p.nickname} {isMe ? "(나)" : ""}
-                          </span>
+                    return (Object.values(multiplayerRoomState.players || {}) as PlayerState[])
+                      .filter(Boolean)
+                      .sort((a: PlayerState, b: PlayerState) => {
+                        if (a.finished !== b.finished) {
+                          return a.finished ? -1 : 1;
+                        }
+                        const diff = (b.currentIndex || 0) - (a.currentIndex || 0);
+                        if (diff !== 0) return diff;
+                        return (a.id || "").localeCompare(b.id || "");
+                      })
+                      .map((p: PlayerState, idx: number) => {
+                        const isMe = p.id === multiplayerRoom?.getMyPlayerId();
+                        const total = p.totalStations || (p.stations ? p.stations.length : coursePath.length) || 1;
+                        const progressPct = Math.min(100, Math.max(0, Math.round((((p.currentIndex || 0) + (p.finished ? 1 : 0)) / total) * 100)));
+                        const oppColor = OPPONENT_COLOR_CLASSES[(p.colorIndex !== undefined ? p.colorIndex : idx) % OPPONENT_COLOR_CLASSES.length];
 
-                          {/* Progress bar with smooth width transition only */}
-                          <div className="flex-1 bg-slate-200 dark:bg-slate-950 rounded-full h-3.5 overflow-hidden border border-slate-300 dark:border-slate-800 relative">
-                            <div
-                              className={`h-full transition-[width] duration-300 ease-out rounded-full ${
-                                isMe ? "bg-emerald-500" : "bg-cyan-500"
-                              }`}
-                              style={{ width: `${progressPct}%` }}
-                            />
-                            <span className="absolute inset-0 flex items-center justify-center text-[9px] font-mono font-black text-slate-800 dark:text-white drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] whitespace-nowrap pointer-events-none">
-                              {p.finished ? "🏆 완주!" : `${p.currentIndex}/${total}`}
+                        return (
+                          <div
+                            key={p.id}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors ${
+                              isMe
+                                ? "bg-emerald-50 dark:bg-emerald-950/80 border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100 shadow-xs"
+                                : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
+                            }`}
+                          >
+                            <span className="w-6 text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-black shrink-0">
+                              {idx + 1}위
+                            </span>
+
+                            <div className="flex items-center gap-1.5 w-20 sm:w-24 shrink-0">
+                              <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isMe ? "bg-emerald-500" : oppColor.dot}`} />
+                              <span className="truncate text-left text-xs font-black whitespace-nowrap">
+                                {p.nickname} {isMe ? "(나)" : ""}
+                              </span>
+                            </div>
+
+                            {/* Progress bar with smooth width transition only */}
+                            <div className="flex-1 bg-slate-200 dark:bg-slate-950 rounded-full h-3.5 overflow-hidden border border-slate-300 dark:border-slate-800 relative">
+                              <div
+                                className={`h-full transition-[width] duration-300 ease-out rounded-full ${
+                                  isMe ? "bg-emerald-500" : oppColor.bar
+                                }`}
+                                style={{ width: `${progressPct}%` }}
+                              />
+                              <span className="absolute inset-0 flex items-center justify-center text-[9px] font-mono font-black text-slate-800 dark:text-white drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] whitespace-nowrap pointer-events-none">
+                                {p.finished ? "🏆 완주!" : `${p.currentIndex}/${total}`}
+                              </span>
+                            </div>
+
+                            <span className="w-14 text-right font-mono text-[10px] text-slate-500 dark:text-slate-300 font-bold shrink-0">
+                              {multiplayerRoomState.gameType === "quiz"
+                                ? `${p.currentIndex || 0}/${total}`
+                                : `${p.cpm || 0} CPM`}
                             </span>
                           </div>
-
-                          <span className="w-14 text-right font-mono text-[10px] text-slate-500 dark:text-slate-300 font-bold shrink-0">
-                            {p.cpm || 0} CPM
-                          </span>
-                        </div>
-                      );
-                    })}
+                        );
+                      });
+                  })()}
                 </div>
               </div>
             )}
@@ -3348,7 +3407,7 @@ export default function App() {
                 courseHistory={courseHistory}
                 upcomingRegions={upcomingRegions}
                 showSimple={showSimpleMap}
-                isQuizMode={activeMode === "quiz"}
+                isQuizMode={activeMode === "quiz" || (activeMode === "multiplayer" && multiplayerRoomState?.gameType === "quiz")}
                 multiplayerPlayers={activeMode === "multiplayer" ? multiplayerRoomState?.players : undefined}
                 myPlayerId={multiplayerRoom?.getMyPlayerId()}
                 coursePath={coursePath}
@@ -3491,7 +3550,7 @@ export default function App() {
                 <div className="flex justify-center">
                   <StatsPanel stats={stats} displayLanguage={settings.displayLanguage || "ko"} />
                 </div>
-                {activeMode === "quiz" ? (
+                {activeMode === "quiz" || (activeMode === "multiplayer" && multiplayerRoomState?.gameType === "quiz") ? (
                   <QuizConsole
                     currentRegion={coursePath[currentIndex]}
                     prevRegion={currentIndex > 0 ? coursePath[currentIndex - 1] : null}
