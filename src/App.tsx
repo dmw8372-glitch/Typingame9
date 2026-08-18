@@ -60,7 +60,7 @@ import { MultiplayerRoom, RoomState, PlayerState } from "./lib/multiplayer";
 import { Logo } from "./components/Logo";
 import { MiniGamesHub } from "./components/minigames/MiniGamesHub";
 import { CountryPillSelector } from "./components/CountryPillSelector";
-import mapTypingLogo from "./assets/images/map_typing_app_logo_1785158271788.jpg";
+import mapTypingLogo from "./assets/images/map_typing_logo_transparent.png";
 import cleanKoreaMapBg from "./assets/images/clean_korea_map_bg_1784937749191.jpg";
 import southKoreaOnlyMap from "./assets/images/south_korea_only_map_1784938467323.jpg";
 import japanMapBg from "./assets/images/japan_red_map_1784975261763.jpg";

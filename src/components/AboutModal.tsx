@@ -36,7 +36,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({
 
         {/* Official Header */}
         <div className={`flex items-center gap-4 pb-5 border-b-2 shrink-0 ${isWorld ? "border-slate-700" : "border-slate-900"}`}>
-          <Logo src={logoImg} className="w-12 h-12 rounded-xl border border-slate-300 shrink-0" />
+          <Logo src={logoImg} className="w-12 h-12 shrink-0 drop-shadow-sm" />
           <div>
             <div className={`text-xs font-bold uppercase tracking-wider ${isWorld ? "text-slate-600 font-extrabold" : "text-slate-500"}`}>
               {isEn ? "System Official Document" : "공식 시스템 정보 및 서비스 명세서"}
